@@ -1,0 +1,7 @@
+*~
+*.o
+.fuse*
+*.root
+.#*
+src/analysisClass.C
+main
