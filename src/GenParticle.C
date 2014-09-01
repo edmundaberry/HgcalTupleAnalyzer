@@ -36,6 +36,7 @@ int    GenParticle::Mother2PdgId(){
 std::ostream& operator<<(std::ostream& stream, GenParticle& object) {
   stream << object.Name() << " " << ": "
 	 << "PDG = " << object.PdgId () << ", "
+         << "Status = " << object.Status () << ", "
 	 << "Pt = "  << object.Pt ()    << ", "
 	 << "Eta = " << object.Eta()    << ", "
 	 << "Phi = " << object.Phi();
