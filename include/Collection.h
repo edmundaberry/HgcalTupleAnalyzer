@@ -127,6 +127,19 @@ class Collection {
     return new_collection;
   }
   
+  template<class Object1>
+    CollectionPtr SkimByAbsEtaRange ( double min_abs_eta, double max_abs_eta ) { 
+    CollectionPtr new_collection ( new Collection(*m_data,0 ));
+    new_collection -> SetHLTFilterObjectIndex ( m_hlt_filter_index );
+    unsigned short size = GetSize();
+    for (unsigned short i = 0; i < size ; ++i){
+      Object1 constituent = GetConstituent<Object1> (i);
+      if ( fabs(constituent.Eta()) >= min_abs_eta && fabs(constituent.Eta()) <= max_abs_eta ) 
+        new_collection -> Append ( constituent.GetRawIndex() );
+    }
+    return new_collection;
+  }
+  
   //------------------------------------------------------------------------------------------
   // Skim by minimum delta R from objects in another collection
   // 
