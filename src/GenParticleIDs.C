@@ -6,9 +6,9 @@
 #include "IDTypes.h"
 
 bool GenParticle::PassUserID (ID id, bool verbose){ 
-  if      ( id == GEN_PARTICLE_IS_HARD_SCATTER_VBF_QUARK ) return PassUserID_IsVBFQuark(verbose);
-  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_QUARK     ) return PassUserID_IsQuark   (verbose);
-  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_GLUON     ) return PassUserID_IsGluon   (verbose);
+  if      ( id == GEN_PARTICLE_IS_HARD_SCATTER_VBF_QUARK ) return PassUserID_IsVBFQuark         (verbose);
+  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_QUARK     ) return PassUserID_IsHardScatterQuark (verbose);
+  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_GLUON     ) return PassUserID_IsHardScatterGluon (verbose);
   else return false;
 }
 
