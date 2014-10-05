@@ -67,11 +67,11 @@ class Collection {
 
   template <class Object1, class Object2> 
     int HasHowMany ( const CollectionPtr other_collection ){
-    std::vector<unsigned short> other_collection_raw_indices = other_collection -> GetRawIndices();
+    std::vector<unsigned short> * other_collection_raw_indices = other_collection -> GetRawIndices();
     std::vector<unsigned short> common_raw_indices;
     // std::sort ( m_raw_indices.begin(), m_raw_indices.end() );
     // std::sort ( other_collection_raw_indices.begin(), other_collection_raw_indices.end() );
-    std::set_intersection ( other_collection_raw_indices.begin(), other_collection_raw_indices.end(),
+    std::set_intersection ( other_collection_raw_indices -> begin(), other_collection_raw_indices -> end(),
 			    m_raw_indices.begin()               , m_raw_indices.end(),
 			    std::back_inserter ( common_raw_indices ) );
     return common_raw_indices.size();
@@ -139,7 +139,26 @@ class Collection {
     }
     return new_collection;
   }
+
+  //------------------------------------------------------------------------------------------
+  // Get leading PT member
+  //------------------------------------------------------------------------------------------
   
+  template <class Object1>
+    Object1 GetLeadPtObject () {
+    unsigned short size = GetSize();
+    double max_pt = -999.;
+    int max_pt_index = -1;
+    for (unsigned short i = 0; i < size; ++i){
+      Object1 constituent = GetConstituent<Object1> (i);
+      if ( constituent.Pt() > max_pt ) {
+	max_pt = constituent.Pt();
+	max_pt_index = i;
+      }
+    }
+    return GetConstituent<Object1> (max_pt_index);
+  }
+
   //------------------------------------------------------------------------------------------
   // Skim by minimum delta R from objects in another collection
   // 
@@ -211,6 +230,20 @@ class Collection {
         if ( dr < tmp_min_dr ) tmp_min_dr = dr;
       }
       if ( tmp_min_dr <= max_dr ) new_collection -> Append ( this_collection_constituent.GetRawIndex() );
+    }
+    return new_collection;
+  }
+
+  template <class Object1, class Object2> 
+    CollectionPtr SkimByRequireDRMatch ( Object2 & other_object, double max_dr ){
+    unsigned short this_collection_size = GetSize();
+    CollectionPtr new_collection  ( new Collection(*m_data,0));
+    new_collection -> SetHLTFilterObjectIndex ( m_hlt_filter_index );
+    for (unsigned short i = 0; i < this_collection_size ; ++i) {
+      double tmp_min_dr = 999.0;
+      Object1 this_collection_constituent  = GetConstituent<Object1>(i);
+      double dr = this_collection_constituent.DeltaR ( & other_object );
+      if ( dr <= max_dr ) new_collection -> Append ( this_collection_constituent.GetRawIndex() );
     }
     return new_collection;
   }
