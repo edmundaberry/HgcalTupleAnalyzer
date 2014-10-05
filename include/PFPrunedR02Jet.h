@@ -1,14 +1,14 @@
-#ifndef PFPRUNED_R5_JET_H
-#define PFPRUNED_R5_JET_H
+#ifndef PFPRUNED_R02_JET_H
+#define PFPRUNED_R02_JET_H
 
 #include "PFPrunedJet.h"
 
-class PFPrunedR5Jet : public PFPrunedJet { 
+class PFPrunedR02Jet : public PFPrunedJet { 
 
  public:
   
-  PFPrunedR5Jet();
-  PFPrunedR5Jet(Collection& c, unsigned short i, short j = 0);
+  PFPrunedR02Jet();
+  PFPrunedR02Jet(Collection& c, unsigned short i, short j = 0);
   
   // Kinematic variables
 
@@ -39,10 +39,10 @@ class PFPrunedR5Jet : public PFPrunedJet {
 
   bool PassUserID ( ID id, bool verbose = false ) { return false; }
   
-  double RCutParameter() { return 0.5; }
+  double RCutParameter() { return 0.02; }
 
 };
 
-std::ostream& operator<< (std::ostream& stream, PFPrunedR5Jet& object);
+std::ostream& operator<< (std::ostream& stream, PFPrunedR02Jet& object);
 
 #endif

@@ -5,10 +5,10 @@
 // Constructors
 
 PFPrunedR5Jet::PFPrunedR5Jet():
-  Object(){}
+  PFPrunedJet(){}
 
 PFPrunedR5Jet::PFPrunedR5Jet(Collection& c, unsigned short i, short j ):
-  Object(c,i,"PFPrunedR5Jet") {}
+  PFPrunedJet(c,i,j) {}
 
 // Kinematic variables
 
@@ -19,6 +19,7 @@ double & PFPrunedR5Jet::Tau1         ()      { return m_collection -> GetData() 
 double & PFPrunedR5Jet::Tau2         ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut5Tau2         -> at ( m_raw_index );    }
 double & PFPrunedR5Jet::Tau3         ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut5Tau3         -> at ( m_raw_index );    }
 double & PFPrunedR5Jet::NSubJ        ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut5NSubJ        -> at ( m_raw_index );    }
+double & PFPrunedR5Jet::Mass         ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut5Mass         -> at ( m_raw_index );    }
 
 // Subjet variables  
 
