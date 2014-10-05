@@ -30,6 +30,8 @@ class PFCand : public Object {
   bool PassUserID_IsNeutralHadron (bool verbose);
   bool PassUserID_IsHFHadron      (bool verbose);
   bool PassUserID_IsHFEGamma      (bool verbose);
+  bool PassUserID_IsCharged       (bool verbose);
+  bool PassUserID_IsNeutral       (bool verbose);
   
 };
 
