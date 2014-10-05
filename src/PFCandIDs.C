@@ -8,6 +8,8 @@ bool PFCand::PassUserID (ID id, bool verbose){
   else if ( id == PFCAND_IS_NEUTRAL_HADRON ) return PassUserID_IsNeutralHadron (verbose);
   else if ( id == PFCAND_IS_HF_HADRON      ) return PassUserID_IsHFHadron      (verbose);
   else if ( id == PFCAND_IS_HF_EGAMMA      ) return PassUserID_IsHFEGamma      (verbose);
+  else if ( id == PFCAND_IS_CHARGED        ) return PassUserID_IsCharged       (verbose);
+  else if ( id == PFCAND_IS_NEUTRAL        ) return PassUserID_IsNeutral       (verbose);
   else return false;
 }
 
@@ -18,3 +20,5 @@ bool PFCand::PassUserID_IsPhoton        (bool verbose){ return ( Id() == 4 ); }
 bool PFCand::PassUserID_IsNeutralHadron (bool verbose){ return ( Id() == 5 ); }
 bool PFCand::PassUserID_IsHFHadron      (bool verbose){ return ( Id() == 6 ); }
 bool PFCand::PassUserID_IsHFEGamma      (bool verbose){ return ( Id() == 7 ); }
+bool PFCand::PassUserID_IsCharged       (bool verbose){ return ( Id() <= 3 ); }
+bool PFCand::PassUserID_IsNeutral       (bool verbose){ return ( Id() == 4 || Id() == 5 ); }

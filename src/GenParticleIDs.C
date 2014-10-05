@@ -9,7 +9,25 @@ bool GenParticle::PassUserID (ID id, bool verbose){
   if      ( id == GEN_PARTICLE_IS_HARD_SCATTER_VBF_QUARK ) return PassUserID_IsVBFQuark         (verbose);
   else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_QUARK     ) return PassUserID_IsHardScatterQuark (verbose);
   else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_GLUON     ) return PassUserID_IsHardScatterGluon (verbose);
+  else if ( id == GEN_PARTICLE_IS_FINAL_STATE_PARTON     ) return PassUserID_IsFinalStateParton (verbose);
+  else if ( id == GEN_PARTICLE_IS_B_QUARK                ) return PassUserID_IsBQuark           (verbose);
+  else if ( id == GEN_PARTICLE_IS_C_QUARK                ) return PassUserID_IsCQuark           (verbose);
+  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_LEPTON    ) return PassUserID_IsHardScatterLepton(verbose);
   else return false;
+}
+
+bool GenParticle::PassUserID_IsBQuark ( bool verbose ) {
+  return ( abs ( PdgId() ) == 5 );
+}
+
+bool GenParticle::PassUserID_IsCQuark ( bool verbose ) {
+  return ( abs ( PdgId() ) == 4 );
+}
+
+bool GenParticle::PassUserID_IsFinalStateParton (bool verbose){
+  if ( PdgId() >= 81 && PdgId() <= 100 ) return false;
+  if ( HasPartonDaughter() == 1        ) return false;
+  return true;
 }
 
 bool GenParticle::PassUserID_IsHardScatter(bool verbose){
@@ -18,6 +36,12 @@ bool GenParticle::PassUserID_IsHardScatter(bool verbose){
 
 bool GenParticle::PassUserID_IsQuark(bool verbose){
   return ( abs ( PdgId() ) <= 6 );
+}
+
+bool GenParticle::PassUserID_IsLepton(bool verbose){
+  return ( abs ( PdgId() ) == 11 ||
+	   abs ( PdgId() ) == 13 ||
+	   abs ( PdgId() ) == 15  );
 }
 
 bool GenParticle::PassUserID_IsGluon(bool verbose){
@@ -75,6 +99,14 @@ bool GenParticle::PassUserID_IsHardScatterQuark ( bool verbose ) {
   return true;
 }
 
+
+bool GenParticle::PassUserID_IsHardScatterLepton ( bool verbose ) {
+  if ( ! PassUserID_IsHardScatter(verbose) ) return false;
+  if ( ! PassUserID_IsLepton     (verbose) ) return false;
+  return true;
+}
+
+
 bool GenParticle::PassUserID_IsHardScatterVBFQuark ( bool verbose ) {
   if ( ! PassUserID_IsHardScatter(verbose) ) return false;
   if ( ! PassUserID_IsVBFQuark   (verbose) ) return false;
@@ -86,4 +118,6 @@ bool GenParticle::PassUserID_IsHardScatterGluon ( bool verbose ) {
   if ( ! PassUserID_IsGluon      (verbose) ) return false;
   return true;
 }
+
+
 
