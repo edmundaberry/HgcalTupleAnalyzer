@@ -2,6 +2,9 @@
 *.o
 .fuse*
 *.root
+*.png
+*.pdf
+*.sh
 .#*
 src/analysisClass.C
 main
