@@ -8,7 +8,7 @@ void jet_multi( const char * name){
   canvas -> SetLogy();
 
 
-  TFile * wjet_file = new TFile("output_WJet.root");
+  TFile * wjet_file = new TFile("output_QQH.root");
   TFile * qqh_file  = new TFile("output_QQH.root" );
 
   char quark_name[100]; sprintf(quark_name, "multi_quarkPrunedR%sJets", name );

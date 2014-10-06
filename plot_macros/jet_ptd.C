@@ -6,7 +6,7 @@ void jet_ptd( const char * name){
 
   TCanvas * canvas = new TCanvas();
 
-  TFile * wjet_file = new TFile("output_WJet.root");
+  TFile * wjet_file = new TFile("output_QQH.root");
   TFile * qqh_file  = new TFile("output_QQH.root" );
 
   char quark_name[100]; sprintf(quark_name, "ptd_quarkPrunedR%sJets", name );

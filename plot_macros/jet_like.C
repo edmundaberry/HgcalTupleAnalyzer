@@ -7,7 +7,7 @@ void jet_like(){
   TCanvas * canvas = new TCanvas();
 
   TFile * wjet_file = new TFile("output_WJet.root");
-  TFile * qqh_file  = new TFile("output_QQH.root" );
+  TFile * qqh_file  = new TFile("output_WJet.root" );
 
   char quark_name[100]; sprintf(quark_name, "like_quarkPrunedR001Jets");
   char gluon_name[100]; sprintf(gluon_name, "like_gluonPrunedR001Jets");
