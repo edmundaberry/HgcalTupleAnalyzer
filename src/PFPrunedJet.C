@@ -25,6 +25,10 @@ double PFPrunedJet::getPTD() {
   return m_ptd;
 }
 
+double PFPrunedJet::getWeightedDepth(){
+  return -999.;
+}
+
 
 void PFPrunedJet::calculateDiscriminants() { 
 
