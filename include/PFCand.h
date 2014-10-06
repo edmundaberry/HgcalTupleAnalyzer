@@ -5,6 +5,10 @@
 #include "IDTypes.h"
 #include "Collection.h"
 
+#include "HGCEERecHit.h" 
+#include "HGCHEBRecHit.h" 
+#include "HGCHEFRecHit.h"
+
 class PFCand : public Object { 
 
  public:
@@ -32,6 +36,14 @@ class PFCand : public Object {
   bool PassUserID_IsHFEGamma      (bool verbose);
   bool PassUserID_IsCharged       (bool verbose);
   bool PassUserID_IsNeutral       (bool verbose);
+
+  int getNHGCEERecHits ();
+  int getNHGCHEBRecHits();
+  int getNHGCHEFRecHits();
+
+  HGCEERecHit  getHGCEERecHit  (int i);
+  HGCHEBRecHit getHGCHEBRecHit (int i);
+  HGCHEFRecHit getHGCHEFRecHit (int i);
   
 };
 
