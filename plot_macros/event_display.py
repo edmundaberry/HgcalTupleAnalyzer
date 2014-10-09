@@ -39,14 +39,14 @@ def drawPFJets ( tree, canvas ):
     canvas.cd()
     
     nGenPart = tree.GenParticlePt.size()
-    nPFJet = tree.PFCA4JetPt.size()
+    nPFJet = tree.PFCA4PrunedJetRCut001Pt.size()
     cone_size = 0.4
 
     for iPFJet in range (0, nPFJet):
-        pt  = tree.PFCA4JetPt [iPFJet]
-        eta = tree.PFCA4JetEta[iPFJet]
-        phi = tree.PFCA4JetPhi[iPFJet]
-        mass = tree.PFCA4JetMass[iPFJet] * 1000.
+        pt   = tree.PFCA4PrunedJetRCut001Pt [iPFJet]
+        eta  = tree.PFCA4PrunedJetRCut001Eta[iPFJet]
+        phi  = tree.PFCA4PrunedJetRCut001Phi[iPFJet]
+        mass = tree.PFCA4PrunedJetRCut001Mass[iPFJet] * 1000.
         
         v_jet = r.TLorentzVector()
         v_jet.SetPtEtaPhiM( pt, eta, phi, 0. )
@@ -206,7 +206,6 @@ def getGenParts ( tree ):
     
     nGenParts = tree.GenParticlePt.size()
     
-
     for iGenPart in range (0, nGenParts):
         pt      = tree.GenParticlePt    [iGenPart]
         eta     = tree.GenParticleEta   [iGenPart]
