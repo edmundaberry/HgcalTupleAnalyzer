@@ -50,6 +50,7 @@ class PFPrunedJet : public Object {
   double getWidth();
   double getPTD  ();
   double getWeightedDepth();
+  double getMaxRHDepth();
   
  private:
   
