@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Sep  1 13:13:02 2014 by ROOT version 5.34/07
+// Wed Oct  8 14:18:58 2014 by ROOT version 5.34/20
 // from TTree tree/
 // found on file: data/HGCAL_QQH_output.root
 //////////////////////////////////////////////////////////
@@ -17,9 +17,9 @@
 #include <vector>
 #include <vector>
 
-using namespace std;
-
 // Fixed size dimensions of array or collections stored in the TTree if any.
+
+using namespace std;
 
 class HgcalTupleTree {
 public :
@@ -50,6 +50,15 @@ public :
    vector<double>  *GenParticleVX;
    vector<double>  *GenParticleVY;
    vector<double>  *GenParticleVZ;
+   vector<double>  *HGCEEPFClusterEnergy;
+   vector<double>  *HGCEEPFClusterEta;
+   vector<double>  *HGCEEPFClusterPhi;
+   vector<double>  *HGCEEPFClusterPt;
+   vector<double>  *HGCEEPFClusterR;
+   vector<double>  *HGCEEPFClusterTime;
+   vector<double>  *HGCEEPFClusterX;
+   vector<double>  *HGCEEPFClusterY;
+   vector<double>  *HGCEEPFClusterZ;
    vector<double>  *HGCEERecHitCorner1Eta;
    vector<double>  *HGCEERecHitCorner1Phi;
    vector<double>  *HGCEERecHitCorner2Eta;
@@ -66,6 +75,15 @@ public :
    vector<double>  *HGCEERecHitX;
    vector<double>  *HGCEERecHitY;
    vector<double>  *HGCEERecHitZ;
+   vector<double>  *HGCHEBPFClusterEnergy;
+   vector<double>  *HGCHEBPFClusterEta;
+   vector<double>  *HGCHEBPFClusterPhi;
+   vector<double>  *HGCHEBPFClusterPt;
+   vector<double>  *HGCHEBPFClusterR;
+   vector<double>  *HGCHEBPFClusterTime;
+   vector<double>  *HGCHEBPFClusterX;
+   vector<double>  *HGCHEBPFClusterY;
+   vector<double>  *HGCHEBPFClusterZ;
    vector<double>  *HGCHEBRecHitCorner1Eta;
    vector<double>  *HGCHEBRecHitCorner1Phi;
    vector<double>  *HGCHEBRecHitCorner2Eta;
@@ -82,6 +100,15 @@ public :
    vector<double>  *HGCHEBRecHitX;
    vector<double>  *HGCHEBRecHitY;
    vector<double>  *HGCHEBRecHitZ;
+   vector<double>  *HGCHEFPFClusterEnergy;
+   vector<double>  *HGCHEFPFClusterEta;
+   vector<double>  *HGCHEFPFClusterPhi;
+   vector<double>  *HGCHEFPFClusterPt;
+   vector<double>  *HGCHEFPFClusterR;
+   vector<double>  *HGCHEFPFClusterTime;
+   vector<double>  *HGCHEFPFClusterX;
+   vector<double>  *HGCHEFPFClusterY;
+   vector<double>  *HGCHEFPFClusterZ;
    vector<double>  *HGCHEFRecHitCorner1Eta;
    vector<double>  *HGCHEFRecHitCorner1Phi;
    vector<double>  *HGCHEFRecHitCorner2Eta;
@@ -265,6 +292,9 @@ public :
    vector<double>  *PFCandEta;
    vector<double>  *PFCandPhi;
    vector<double>  *PFCandPt;
+   vector<vector<double> > *HGCEEPFClusterRecHitFraction;
+   vector<vector<double> > *HGCHEBPFClusterRecHitFraction;
+   vector<vector<double> > *HGCHEFPFClusterRecHitFraction;
    vector<vector<double> > *PFCA4PrunedJetRCut001DaughterEta;
    vector<vector<double> > *PFCA4PrunedJetRCut001DaughterMass;
    vector<vector<double> > *PFCA4PrunedJetRCut001DaughterPhi;
@@ -321,9 +351,6 @@ public :
    vector<vector<double> > *PFCA4PrunedJetRCut5DaughterMass;
    vector<vector<double> > *PFCA4PrunedJetRCut5DaughterPhi;
    vector<vector<double> > *PFCA4PrunedJetRCut5DaughterPt;
-   vector<vector<double> > *PFCandHGCEERecHitFraction;
-   vector<vector<double> > *PFCandHGCHEBRecHitFraction;
-   vector<vector<double> > *PFCandHGCHEFRecHitFraction;
    vector<int>     *GenParticleHasPartonDaughter;
    vector<int>     *GenParticleMother1Index;
    vector<int>     *GenParticleMother2Index;
@@ -332,16 +359,19 @@ public :
    vector<int>     *GenParticleNumMother;
    vector<int>     *GenParticlePdgId;
    vector<int>     *GenParticleStatus;
+   vector<int>     *HGCEEPFClusterLayer;
    vector<int>     *HGCEERecHitCell;
    vector<int>     *HGCEERecHitLayer;
    vector<int>     *HGCEERecHitSector;
    vector<int>     *HGCEERecHitSubSector;
    vector<int>     *HGCEERecHitSubdet;
+   vector<int>     *HGCHEBPFClusterLayer;
    vector<int>     *HGCHEBRecHitCell;
    vector<int>     *HGCHEBRecHitLayer;
    vector<int>     *HGCHEBRecHitSector;
    vector<int>     *HGCHEBRecHitSubSector;
    vector<int>     *HGCHEBRecHitSubdet;
+   vector<int>     *HGCHEFPFClusterLayer;
    vector<int>     *HGCHEFRecHitCell;
    vector<int>     *HGCHEFRecHitLayer;
    vector<int>     *HGCHEFRecHitSector;
@@ -362,6 +392,9 @@ public :
    vector<int>     *PFCA4PrunedJetRCut4NDaughters;
    vector<int>     *PFCA4PrunedJetRCut5NDaughters;
    vector<int>     *PFCandId;
+   vector<vector<int> > *HGCEEPFClusterRecHitIndex;
+   vector<vector<int> > *HGCHEBPFClusterRecHitIndex;
+   vector<vector<int> > *HGCHEFPFClusterRecHitIndex;
    vector<vector<int> > *PFCA4JetPFCandIndices;
    vector<vector<int> > *PFCA4PrunedJetRCut001PFCandIndices;
    vector<vector<int> > *PFCA4PrunedJetRCut003PFCandIndices;
@@ -377,9 +410,9 @@ public :
    vector<vector<int> > *PFCA4PrunedJetRCut3PFCandIndices;
    vector<vector<int> > *PFCA4PrunedJetRCut4PFCandIndices;
    vector<vector<int> > *PFCA4PrunedJetRCut5PFCandIndices;
-   vector<vector<int> > *PFCandHGCEERecHitIndex;
-   vector<vector<int> > *PFCandHGCHEBRecHitIndex;
-   vector<vector<int> > *PFCandHGCHEFRecHitIndex;
+   vector<vector<int> > *PFCandHGCEEClusterIndex;
+   vector<vector<int> > *PFCandHGCHEBClusterIndex;
+   vector<vector<int> > *PFCandHGCHEFClusterIndex;
    UInt_t          event;
    UInt_t          ls;
    UInt_t          run;
@@ -408,6 +441,15 @@ public :
    TBranch        *b_GenParticleVX;   //!
    TBranch        *b_GenParticleVY;   //!
    TBranch        *b_GenParticleVZ;   //!
+   TBranch        *b_HGCEEPFClusterEnergy;   //!
+   TBranch        *b_HGCEEPFClusterEta;   //!
+   TBranch        *b_HGCEEPFClusterPhi;   //!
+   TBranch        *b_HGCEEPFClusterPt;   //!
+   TBranch        *b_HGCEEPFClusterR;   //!
+   TBranch        *b_HGCEEPFClusterTime;   //!
+   TBranch        *b_HGCEEPFClusterX;   //!
+   TBranch        *b_HGCEEPFClusterY;   //!
+   TBranch        *b_HGCEEPFClusterZ;   //!
    TBranch        *b_HGCEERecHitCorner1Eta;   //!
    TBranch        *b_HGCEERecHitCorner1Phi;   //!
    TBranch        *b_HGCEERecHitCorner2Eta;   //!
@@ -424,6 +466,15 @@ public :
    TBranch        *b_HGCEERecHitX;   //!
    TBranch        *b_HGCEERecHitY;   //!
    TBranch        *b_HGCEERecHitZ;   //!
+   TBranch        *b_HGCHEBPFClusterEnergy;   //!
+   TBranch        *b_HGCHEBPFClusterEta;   //!
+   TBranch        *b_HGCHEBPFClusterPhi;   //!
+   TBranch        *b_HGCHEBPFClusterPt;   //!
+   TBranch        *b_HGCHEBPFClusterR;   //!
+   TBranch        *b_HGCHEBPFClusterTime;   //!
+   TBranch        *b_HGCHEBPFClusterX;   //!
+   TBranch        *b_HGCHEBPFClusterY;   //!
+   TBranch        *b_HGCHEBPFClusterZ;   //!
    TBranch        *b_HGCHEBRecHitCorner1Eta;   //!
    TBranch        *b_HGCHEBRecHitCorner1Phi;   //!
    TBranch        *b_HGCHEBRecHitCorner2Eta;   //!
@@ -440,6 +491,15 @@ public :
    TBranch        *b_HGCHEBRecHitX;   //!
    TBranch        *b_HGCHEBRecHitY;   //!
    TBranch        *b_HGCHEBRecHitZ;   //!
+   TBranch        *b_HGCHEFPFClusterEnergy;   //!
+   TBranch        *b_HGCHEFPFClusterEta;   //!
+   TBranch        *b_HGCHEFPFClusterPhi;   //!
+   TBranch        *b_HGCHEFPFClusterPt;   //!
+   TBranch        *b_HGCHEFPFClusterR;   //!
+   TBranch        *b_HGCHEFPFClusterTime;   //!
+   TBranch        *b_HGCHEFPFClusterX;   //!
+   TBranch        *b_HGCHEFPFClusterY;   //!
+   TBranch        *b_HGCHEFPFClusterZ;   //!
    TBranch        *b_HGCHEFRecHitCorner1Eta;   //!
    TBranch        *b_HGCHEFRecHitCorner1Phi;   //!
    TBranch        *b_HGCHEFRecHitCorner2Eta;   //!
@@ -623,6 +683,9 @@ public :
    TBranch        *b_PFCandEta;   //!
    TBranch        *b_PFCandPhi;   //!
    TBranch        *b_PFCandPt;   //!
+   TBranch        *b_HGCEEPFClusterRecHitFraction;   //!
+   TBranch        *b_HGCHEBPFClusterRecHitFraction;   //!
+   TBranch        *b_HGCHEFPFClusterRecHitFraction;   //!
    TBranch        *b_PFCA4PrunedJetRCut001DaughterEta;   //!
    TBranch        *b_PFCA4PrunedJetRCut001DaughterMass;   //!
    TBranch        *b_PFCA4PrunedJetRCut001DaughterPhi;   //!
@@ -679,9 +742,6 @@ public :
    TBranch        *b_PFCA4PrunedJetRCut5DaughterMass;   //!
    TBranch        *b_PFCA4PrunedJetRCut5DaughterPhi;   //!
    TBranch        *b_PFCA4PrunedJetRCut5DaughterPt;   //!
-   TBranch        *b_PFCandHGCEERecHitFraction;   //!
-   TBranch        *b_PFCandHGCHEBRecHitFraction;   //!
-   TBranch        *b_PFCandHGCHEFRecHitFraction;   //!
    TBranch        *b_GenParticleHasPartonDaughter;   //!
    TBranch        *b_GenParticleMother1Index;   //!
    TBranch        *b_GenParticleMother2Index;   //!
@@ -690,16 +750,19 @@ public :
    TBranch        *b_GenParticleNumMother;   //!
    TBranch        *b_GenParticlePdgId;   //!
    TBranch        *b_GenParticleStatus;   //!
+   TBranch        *b_HGCEEPFClusterLayer;   //!
    TBranch        *b_HGCEERecHitCell;   //!
    TBranch        *b_HGCEERecHitLayer;   //!
    TBranch        *b_HGCEERecHitSector;   //!
    TBranch        *b_HGCEERecHitSubSector;   //!
    TBranch        *b_HGCEERecHitSubdet;   //!
+   TBranch        *b_HGCHEBPFClusterLayer;   //!
    TBranch        *b_HGCHEBRecHitCell;   //!
    TBranch        *b_HGCHEBRecHitLayer;   //!
    TBranch        *b_HGCHEBRecHitSector;   //!
    TBranch        *b_HGCHEBRecHitSubSector;   //!
    TBranch        *b_HGCHEBRecHitSubdet;   //!
+   TBranch        *b_HGCHEFPFClusterLayer;   //!
    TBranch        *b_HGCHEFRecHitCell;   //!
    TBranch        *b_HGCHEFRecHitLayer;   //!
    TBranch        *b_HGCHEFRecHitSector;   //!
@@ -720,6 +783,9 @@ public :
    TBranch        *b_PFCA4PrunedJetRCut4NDaughters;   //!
    TBranch        *b_PFCA4PrunedJetRCut5NDaughters;   //!
    TBranch        *b_PFCandId;   //!
+   TBranch        *b_HGCEEPFClusterRecHitIndex;   //!
+   TBranch        *b_HGCHEBPFClusterRecHitIndex;   //!
+   TBranch        *b_HGCHEFPFClusterRecHitIndex;   //!
    TBranch        *b_PFCA4JetPFCandIndices;   //!
    TBranch        *b_PFCA4PrunedJetRCut001PFCandIndices;   //!
    TBranch        *b_PFCA4PrunedJetRCut003PFCandIndices;   //!
@@ -735,9 +801,9 @@ public :
    TBranch        *b_PFCA4PrunedJetRCut3PFCandIndices;   //!
    TBranch        *b_PFCA4PrunedJetRCut4PFCandIndices;   //!
    TBranch        *b_PFCA4PrunedJetRCut5PFCandIndices;   //!
-   TBranch        *b_PFCandHGCEERecHitIndex;   //!
-   TBranch        *b_PFCandHGCHEBRecHitIndex;   //!
-   TBranch        *b_PFCandHGCHEFRecHitIndex;   //!
+   TBranch        *b_PFCandHGCEEClusterIndex;   //!
+   TBranch        *b_PFCandHGCHEBClusterIndex;   //!
+   TBranch        *b_PFCandHGCHEFClusterIndex;   //!
    TBranch        *b_event;   //!
    TBranch        *b_ls;   //!
    TBranch        *b_run;   //!
@@ -831,6 +897,15 @@ void HgcalTupleTree::Init(TTree *tree)
    GenParticleVX = 0;
    GenParticleVY = 0;
    GenParticleVZ = 0;
+   HGCEEPFClusterEnergy = 0;
+   HGCEEPFClusterEta = 0;
+   HGCEEPFClusterPhi = 0;
+   HGCEEPFClusterPt = 0;
+   HGCEEPFClusterR = 0;
+   HGCEEPFClusterTime = 0;
+   HGCEEPFClusterX = 0;
+   HGCEEPFClusterY = 0;
+   HGCEEPFClusterZ = 0;
    HGCEERecHitCorner1Eta = 0;
    HGCEERecHitCorner1Phi = 0;
    HGCEERecHitCorner2Eta = 0;
@@ -847,6 +922,15 @@ void HgcalTupleTree::Init(TTree *tree)
    HGCEERecHitX = 0;
    HGCEERecHitY = 0;
    HGCEERecHitZ = 0;
+   HGCHEBPFClusterEnergy = 0;
+   HGCHEBPFClusterEta = 0;
+   HGCHEBPFClusterPhi = 0;
+   HGCHEBPFClusterPt = 0;
+   HGCHEBPFClusterR = 0;
+   HGCHEBPFClusterTime = 0;
+   HGCHEBPFClusterX = 0;
+   HGCHEBPFClusterY = 0;
+   HGCHEBPFClusterZ = 0;
    HGCHEBRecHitCorner1Eta = 0;
    HGCHEBRecHitCorner1Phi = 0;
    HGCHEBRecHitCorner2Eta = 0;
@@ -863,6 +947,15 @@ void HgcalTupleTree::Init(TTree *tree)
    HGCHEBRecHitX = 0;
    HGCHEBRecHitY = 0;
    HGCHEBRecHitZ = 0;
+   HGCHEFPFClusterEnergy = 0;
+   HGCHEFPFClusterEta = 0;
+   HGCHEFPFClusterPhi = 0;
+   HGCHEFPFClusterPt = 0;
+   HGCHEFPFClusterR = 0;
+   HGCHEFPFClusterTime = 0;
+   HGCHEFPFClusterX = 0;
+   HGCHEFPFClusterY = 0;
+   HGCHEFPFClusterZ = 0;
    HGCHEFRecHitCorner1Eta = 0;
    HGCHEFRecHitCorner1Phi = 0;
    HGCHEFRecHitCorner2Eta = 0;
@@ -1046,6 +1139,9 @@ void HgcalTupleTree::Init(TTree *tree)
    PFCandEta = 0;
    PFCandPhi = 0;
    PFCandPt = 0;
+   HGCEEPFClusterRecHitFraction = 0;
+   HGCHEBPFClusterRecHitFraction = 0;
+   HGCHEFPFClusterRecHitFraction = 0;
    PFCA4PrunedJetRCut001DaughterEta = 0;
    PFCA4PrunedJetRCut001DaughterMass = 0;
    PFCA4PrunedJetRCut001DaughterPhi = 0;
@@ -1102,9 +1198,6 @@ void HgcalTupleTree::Init(TTree *tree)
    PFCA4PrunedJetRCut5DaughterMass = 0;
    PFCA4PrunedJetRCut5DaughterPhi = 0;
    PFCA4PrunedJetRCut5DaughterPt = 0;
-   PFCandHGCEERecHitFraction = 0;
-   PFCandHGCHEBRecHitFraction = 0;
-   PFCandHGCHEFRecHitFraction = 0;
    GenParticleHasPartonDaughter = 0;
    GenParticleMother1Index = 0;
    GenParticleMother2Index = 0;
@@ -1113,16 +1206,19 @@ void HgcalTupleTree::Init(TTree *tree)
    GenParticleNumMother = 0;
    GenParticlePdgId = 0;
    GenParticleStatus = 0;
+   HGCEEPFClusterLayer = 0;
    HGCEERecHitCell = 0;
    HGCEERecHitLayer = 0;
    HGCEERecHitSector = 0;
    HGCEERecHitSubSector = 0;
    HGCEERecHitSubdet = 0;
+   HGCHEBPFClusterLayer = 0;
    HGCHEBRecHitCell = 0;
    HGCHEBRecHitLayer = 0;
    HGCHEBRecHitSector = 0;
    HGCHEBRecHitSubSector = 0;
    HGCHEBRecHitSubdet = 0;
+   HGCHEFPFClusterLayer = 0;
    HGCHEFRecHitCell = 0;
    HGCHEFRecHitLayer = 0;
    HGCHEFRecHitSector = 0;
@@ -1143,6 +1239,9 @@ void HgcalTupleTree::Init(TTree *tree)
    PFCA4PrunedJetRCut4NDaughters = 0;
    PFCA4PrunedJetRCut5NDaughters = 0;
    PFCandId = 0;
+   HGCEEPFClusterRecHitIndex = 0;
+   HGCHEBPFClusterRecHitIndex = 0;
+   HGCHEFPFClusterRecHitIndex = 0;
    PFCA4JetPFCandIndices = 0;
    PFCA4PrunedJetRCut001PFCandIndices = 0;
    PFCA4PrunedJetRCut003PFCandIndices = 0;
@@ -1158,9 +1257,9 @@ void HgcalTupleTree::Init(TTree *tree)
    PFCA4PrunedJetRCut3PFCandIndices = 0;
    PFCA4PrunedJetRCut4PFCandIndices = 0;
    PFCA4PrunedJetRCut5PFCandIndices = 0;
-   PFCandHGCEERecHitIndex = 0;
-   PFCandHGCHEBRecHitIndex = 0;
-   PFCandHGCHEFRecHitIndex = 0;
+   PFCandHGCEEClusterIndex = 0;
+   PFCandHGCHEBClusterIndex = 0;
+   PFCandHGCHEFClusterIndex = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1190,6 +1289,15 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("GenParticleVX", &GenParticleVX, &b_GenParticleVX);
    fChain->SetBranchAddress("GenParticleVY", &GenParticleVY, &b_GenParticleVY);
    fChain->SetBranchAddress("GenParticleVZ", &GenParticleVZ, &b_GenParticleVZ);
+   fChain->SetBranchAddress("HGCEEPFClusterEnergy", &HGCEEPFClusterEnergy, &b_HGCEEPFClusterEnergy);
+   fChain->SetBranchAddress("HGCEEPFClusterEta", &HGCEEPFClusterEta, &b_HGCEEPFClusterEta);
+   fChain->SetBranchAddress("HGCEEPFClusterPhi", &HGCEEPFClusterPhi, &b_HGCEEPFClusterPhi);
+   fChain->SetBranchAddress("HGCEEPFClusterPt", &HGCEEPFClusterPt, &b_HGCEEPFClusterPt);
+   fChain->SetBranchAddress("HGCEEPFClusterR", &HGCEEPFClusterR, &b_HGCEEPFClusterR);
+   fChain->SetBranchAddress("HGCEEPFClusterTime", &HGCEEPFClusterTime, &b_HGCEEPFClusterTime);
+   fChain->SetBranchAddress("HGCEEPFClusterX", &HGCEEPFClusterX, &b_HGCEEPFClusterX);
+   fChain->SetBranchAddress("HGCEEPFClusterY", &HGCEEPFClusterY, &b_HGCEEPFClusterY);
+   fChain->SetBranchAddress("HGCEEPFClusterZ", &HGCEEPFClusterZ, &b_HGCEEPFClusterZ);
    fChain->SetBranchAddress("HGCEERecHitCorner1Eta", &HGCEERecHitCorner1Eta, &b_HGCEERecHitCorner1Eta);
    fChain->SetBranchAddress("HGCEERecHitCorner1Phi", &HGCEERecHitCorner1Phi, &b_HGCEERecHitCorner1Phi);
    fChain->SetBranchAddress("HGCEERecHitCorner2Eta", &HGCEERecHitCorner2Eta, &b_HGCEERecHitCorner2Eta);
@@ -1206,6 +1314,15 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("HGCEERecHitX", &HGCEERecHitX, &b_HGCEERecHitX);
    fChain->SetBranchAddress("HGCEERecHitY", &HGCEERecHitY, &b_HGCEERecHitY);
    fChain->SetBranchAddress("HGCEERecHitZ", &HGCEERecHitZ, &b_HGCEERecHitZ);
+   fChain->SetBranchAddress("HGCHEBPFClusterEnergy", &HGCHEBPFClusterEnergy, &b_HGCHEBPFClusterEnergy);
+   fChain->SetBranchAddress("HGCHEBPFClusterEta", &HGCHEBPFClusterEta, &b_HGCHEBPFClusterEta);
+   fChain->SetBranchAddress("HGCHEBPFClusterPhi", &HGCHEBPFClusterPhi, &b_HGCHEBPFClusterPhi);
+   fChain->SetBranchAddress("HGCHEBPFClusterPt", &HGCHEBPFClusterPt, &b_HGCHEBPFClusterPt);
+   fChain->SetBranchAddress("HGCHEBPFClusterR", &HGCHEBPFClusterR, &b_HGCHEBPFClusterR);
+   fChain->SetBranchAddress("HGCHEBPFClusterTime", &HGCHEBPFClusterTime, &b_HGCHEBPFClusterTime);
+   fChain->SetBranchAddress("HGCHEBPFClusterX", &HGCHEBPFClusterX, &b_HGCHEBPFClusterX);
+   fChain->SetBranchAddress("HGCHEBPFClusterY", &HGCHEBPFClusterY, &b_HGCHEBPFClusterY);
+   fChain->SetBranchAddress("HGCHEBPFClusterZ", &HGCHEBPFClusterZ, &b_HGCHEBPFClusterZ);
    fChain->SetBranchAddress("HGCHEBRecHitCorner1Eta", &HGCHEBRecHitCorner1Eta, &b_HGCHEBRecHitCorner1Eta);
    fChain->SetBranchAddress("HGCHEBRecHitCorner1Phi", &HGCHEBRecHitCorner1Phi, &b_HGCHEBRecHitCorner1Phi);
    fChain->SetBranchAddress("HGCHEBRecHitCorner2Eta", &HGCHEBRecHitCorner2Eta, &b_HGCHEBRecHitCorner2Eta);
@@ -1222,6 +1339,15 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("HGCHEBRecHitX", &HGCHEBRecHitX, &b_HGCHEBRecHitX);
    fChain->SetBranchAddress("HGCHEBRecHitY", &HGCHEBRecHitY, &b_HGCHEBRecHitY);
    fChain->SetBranchAddress("HGCHEBRecHitZ", &HGCHEBRecHitZ, &b_HGCHEBRecHitZ);
+   fChain->SetBranchAddress("HGCHEFPFClusterEnergy", &HGCHEFPFClusterEnergy, &b_HGCHEFPFClusterEnergy);
+   fChain->SetBranchAddress("HGCHEFPFClusterEta", &HGCHEFPFClusterEta, &b_HGCHEFPFClusterEta);
+   fChain->SetBranchAddress("HGCHEFPFClusterPhi", &HGCHEFPFClusterPhi, &b_HGCHEFPFClusterPhi);
+   fChain->SetBranchAddress("HGCHEFPFClusterPt", &HGCHEFPFClusterPt, &b_HGCHEFPFClusterPt);
+   fChain->SetBranchAddress("HGCHEFPFClusterR", &HGCHEFPFClusterR, &b_HGCHEFPFClusterR);
+   fChain->SetBranchAddress("HGCHEFPFClusterTime", &HGCHEFPFClusterTime, &b_HGCHEFPFClusterTime);
+   fChain->SetBranchAddress("HGCHEFPFClusterX", &HGCHEFPFClusterX, &b_HGCHEFPFClusterX);
+   fChain->SetBranchAddress("HGCHEFPFClusterY", &HGCHEFPFClusterY, &b_HGCHEFPFClusterY);
+   fChain->SetBranchAddress("HGCHEFPFClusterZ", &HGCHEFPFClusterZ, &b_HGCHEFPFClusterZ);
    fChain->SetBranchAddress("HGCHEFRecHitCorner1Eta", &HGCHEFRecHitCorner1Eta, &b_HGCHEFRecHitCorner1Eta);
    fChain->SetBranchAddress("HGCHEFRecHitCorner1Phi", &HGCHEFRecHitCorner1Phi, &b_HGCHEFRecHitCorner1Phi);
    fChain->SetBranchAddress("HGCHEFRecHitCorner2Eta", &HGCHEFRecHitCorner2Eta, &b_HGCHEFRecHitCorner2Eta);
@@ -1405,6 +1531,9 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("PFCandEta", &PFCandEta, &b_PFCandEta);
    fChain->SetBranchAddress("PFCandPhi", &PFCandPhi, &b_PFCandPhi);
    fChain->SetBranchAddress("PFCandPt", &PFCandPt, &b_PFCandPt);
+   fChain->SetBranchAddress("HGCEEPFClusterRecHitFraction", &HGCEEPFClusterRecHitFraction, &b_HGCEEPFClusterRecHitFraction);
+   fChain->SetBranchAddress("HGCHEBPFClusterRecHitFraction", &HGCHEBPFClusterRecHitFraction, &b_HGCHEBPFClusterRecHitFraction);
+   fChain->SetBranchAddress("HGCHEFPFClusterRecHitFraction", &HGCHEFPFClusterRecHitFraction, &b_HGCHEFPFClusterRecHitFraction);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut001DaughterEta", &PFCA4PrunedJetRCut001DaughterEta, &b_PFCA4PrunedJetRCut001DaughterEta);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut001DaughterMass", &PFCA4PrunedJetRCut001DaughterMass, &b_PFCA4PrunedJetRCut001DaughterMass);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut001DaughterPhi", &PFCA4PrunedJetRCut001DaughterPhi, &b_PFCA4PrunedJetRCut001DaughterPhi);
@@ -1461,9 +1590,6 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("PFCA4PrunedJetRCut5DaughterMass", &PFCA4PrunedJetRCut5DaughterMass, &b_PFCA4PrunedJetRCut5DaughterMass);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut5DaughterPhi", &PFCA4PrunedJetRCut5DaughterPhi, &b_PFCA4PrunedJetRCut5DaughterPhi);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut5DaughterPt", &PFCA4PrunedJetRCut5DaughterPt, &b_PFCA4PrunedJetRCut5DaughterPt);
-   fChain->SetBranchAddress("PFCandHGCEERecHitFraction", &PFCandHGCEERecHitFraction, &b_PFCandHGCEERecHitFraction);
-   fChain->SetBranchAddress("PFCandHGCHEBRecHitFraction", &PFCandHGCHEBRecHitFraction, &b_PFCandHGCHEBRecHitFraction);
-   fChain->SetBranchAddress("PFCandHGCHEFRecHitFraction", &PFCandHGCHEFRecHitFraction, &b_PFCandHGCHEFRecHitFraction);
    fChain->SetBranchAddress("GenParticleHasPartonDaughter", &GenParticleHasPartonDaughter, &b_GenParticleHasPartonDaughter);
    fChain->SetBranchAddress("GenParticleMother1Index", &GenParticleMother1Index, &b_GenParticleMother1Index);
    fChain->SetBranchAddress("GenParticleMother2Index", &GenParticleMother2Index, &b_GenParticleMother2Index);
@@ -1472,16 +1598,19 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("GenParticleNumMother", &GenParticleNumMother, &b_GenParticleNumMother);
    fChain->SetBranchAddress("GenParticlePdgId", &GenParticlePdgId, &b_GenParticlePdgId);
    fChain->SetBranchAddress("GenParticleStatus", &GenParticleStatus, &b_GenParticleStatus);
+   fChain->SetBranchAddress("HGCEEPFClusterLayer", &HGCEEPFClusterLayer, &b_HGCEEPFClusterLayer);
    fChain->SetBranchAddress("HGCEERecHitCell", &HGCEERecHitCell, &b_HGCEERecHitCell);
    fChain->SetBranchAddress("HGCEERecHitLayer", &HGCEERecHitLayer, &b_HGCEERecHitLayer);
    fChain->SetBranchAddress("HGCEERecHitSector", &HGCEERecHitSector, &b_HGCEERecHitSector);
    fChain->SetBranchAddress("HGCEERecHitSubSector", &HGCEERecHitSubSector, &b_HGCEERecHitSubSector);
    fChain->SetBranchAddress("HGCEERecHitSubdet", &HGCEERecHitSubdet, &b_HGCEERecHitSubdet);
+   fChain->SetBranchAddress("HGCHEBPFClusterLayer", &HGCHEBPFClusterLayer, &b_HGCHEBPFClusterLayer);
    fChain->SetBranchAddress("HGCHEBRecHitCell", &HGCHEBRecHitCell, &b_HGCHEBRecHitCell);
    fChain->SetBranchAddress("HGCHEBRecHitLayer", &HGCHEBRecHitLayer, &b_HGCHEBRecHitLayer);
    fChain->SetBranchAddress("HGCHEBRecHitSector", &HGCHEBRecHitSector, &b_HGCHEBRecHitSector);
    fChain->SetBranchAddress("HGCHEBRecHitSubSector", &HGCHEBRecHitSubSector, &b_HGCHEBRecHitSubSector);
    fChain->SetBranchAddress("HGCHEBRecHitSubdet", &HGCHEBRecHitSubdet, &b_HGCHEBRecHitSubdet);
+   fChain->SetBranchAddress("HGCHEFPFClusterLayer", &HGCHEFPFClusterLayer, &b_HGCHEFPFClusterLayer);
    fChain->SetBranchAddress("HGCHEFRecHitCell", &HGCHEFRecHitCell, &b_HGCHEFRecHitCell);
    fChain->SetBranchAddress("HGCHEFRecHitLayer", &HGCHEFRecHitLayer, &b_HGCHEFRecHitLayer);
    fChain->SetBranchAddress("HGCHEFRecHitSector", &HGCHEFRecHitSector, &b_HGCHEFRecHitSector);
@@ -1502,6 +1631,9 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("PFCA4PrunedJetRCut4NDaughters", &PFCA4PrunedJetRCut4NDaughters, &b_PFCA4PrunedJetRCut4NDaughters);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut5NDaughters", &PFCA4PrunedJetRCut5NDaughters, &b_PFCA4PrunedJetRCut5NDaughters);
    fChain->SetBranchAddress("PFCandId", &PFCandId, &b_PFCandId);
+   fChain->SetBranchAddress("HGCEEPFClusterRecHitIndex", &HGCEEPFClusterRecHitIndex, &b_HGCEEPFClusterRecHitIndex);
+   fChain->SetBranchAddress("HGCHEBPFClusterRecHitIndex", &HGCHEBPFClusterRecHitIndex, &b_HGCHEBPFClusterRecHitIndex);
+   fChain->SetBranchAddress("HGCHEFPFClusterRecHitIndex", &HGCHEFPFClusterRecHitIndex, &b_HGCHEFPFClusterRecHitIndex);
    fChain->SetBranchAddress("PFCA4JetPFCandIndices", &PFCA4JetPFCandIndices, &b_PFCA4JetPFCandIndices);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut001PFCandIndices", &PFCA4PrunedJetRCut001PFCandIndices, &b_PFCA4PrunedJetRCut001PFCandIndices);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut003PFCandIndices", &PFCA4PrunedJetRCut003PFCandIndices, &b_PFCA4PrunedJetRCut003PFCandIndices);
@@ -1517,9 +1649,9 @@ void HgcalTupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("PFCA4PrunedJetRCut3PFCandIndices", &PFCA4PrunedJetRCut3PFCandIndices, &b_PFCA4PrunedJetRCut3PFCandIndices);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut4PFCandIndices", &PFCA4PrunedJetRCut4PFCandIndices, &b_PFCA4PrunedJetRCut4PFCandIndices);
    fChain->SetBranchAddress("PFCA4PrunedJetRCut5PFCandIndices", &PFCA4PrunedJetRCut5PFCandIndices, &b_PFCA4PrunedJetRCut5PFCandIndices);
-   fChain->SetBranchAddress("PFCandHGCEERecHitIndex", &PFCandHGCEERecHitIndex, &b_PFCandHGCEERecHitIndex);
-   fChain->SetBranchAddress("PFCandHGCHEBRecHitIndex", &PFCandHGCHEBRecHitIndex, &b_PFCandHGCHEBRecHitIndex);
-   fChain->SetBranchAddress("PFCandHGCHEFRecHitIndex", &PFCandHGCHEFRecHitIndex, &b_PFCandHGCHEFRecHitIndex);
+   fChain->SetBranchAddress("PFCandHGCEEClusterIndex", &PFCandHGCEEClusterIndex, &b_PFCandHGCEEClusterIndex);
+   fChain->SetBranchAddress("PFCandHGCHEBClusterIndex", &PFCandHGCHEBClusterIndex, &b_PFCandHGCHEBClusterIndex);
+   fChain->SetBranchAddress("PFCandHGCHEFClusterIndex", &PFCandHGCHEFClusterIndex, &b_PFCandHGCHEFClusterIndex);
    fChain->SetBranchAddress("event", &event, &b_event);
    fChain->SetBranchAddress("ls", &ls, &b_ls);
    fChain->SetBranchAddress("run", &run, &b_run);
