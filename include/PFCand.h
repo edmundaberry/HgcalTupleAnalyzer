@@ -5,9 +5,9 @@
 #include "IDTypes.h"
 #include "Collection.h"
 
-#include "HGCEERecHit.h" 
-#include "HGCHEBRecHit.h" 
-#include "HGCHEFRecHit.h"
+#include "HGCEECluster.h" 
+#include "HGCHEBCluster.h" 
+#include "HGCHEFCluster.h"
 
 class PFCand : public Object { 
 
@@ -36,14 +36,14 @@ class PFCand : public Object {
   bool PassUserID_IsHFEGamma      (bool verbose);
   bool PassUserID_IsCharged       (bool verbose);
   bool PassUserID_IsNeutral       (bool verbose);
+ 
+  int getNHGCEEClusters ();
+  int getNHGCHEBClusters();
+  int getNHGCHEFClusters();
 
-  int getNHGCEERecHits ();
-  int getNHGCHEBRecHits();
-  int getNHGCHEFRecHits();
-
-  HGCEERecHit  getHGCEERecHit  (int i);
-  HGCHEBRecHit getHGCHEBRecHit (int i);
-  HGCHEFRecHit getHGCHEFRecHit (int i);
+  HGCEECluster  getHGCEECluster  (int i);
+  HGCHEBCluster getHGCHEBCluster (int i);
+  HGCHEFCluster getHGCHEFCluster (int i);
   
 };
 
