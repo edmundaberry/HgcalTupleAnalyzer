@@ -26,9 +26,70 @@ double PFPrunedJet::getPTD() {
 }
 
 double PFPrunedJet::getWeightedDepth(){
-  return -999.;
+  int nPFCand = getNPFCandidates();
+
+  double sumE2xD = 0.;
+  double sumE2   = 0.;
+  
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCEE  = pfcand.getNHGCEEClusters  ();
+    int nHGCHEF = pfcand.getNHGCHEFClusters ();
+    int nHGCHEB = pfcand.getNHGCHEBClusters ();
+    
+    for (int iHGCEE = 0; iHGCEE < nHGCEE; ++iHGCEE){
+      HGCEECluster r = pfcand.getHGCEECluster(iHGCEE);
+      sumE2    += ( r.Energy() * r.Energy() );
+      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    }
+
+    for (int iHGCHEB = 0; iHGCHEB < nHGCHEB; ++iHGCHEB){
+      HGCHEBCluster r = pfcand.getHGCHEBCluster(iHGCHEB);
+      sumE2    += ( r.Energy() * r.Energy() );
+      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    }
+
+    for (int iHGCHEF = 0; iHGCHEF < nHGCHEF; ++iHGCHEF){
+      HGCHEFCluster r = pfcand.getHGCHEFCluster(iHGCHEF);
+      sumE2    += ( r.Energy() * r.Energy() );
+      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    }
+  }
+  if ( sumE2 > 0 ){ 
+    return sumE2xD / sumE2;
+  }
+  return -1;
 }
 
+double PFPrunedJet::getMaxRHDepth(){ 
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCEE  = pfcand.getNHGCEEClusters  ();
+    int nHGCHEF = pfcand.getNHGCHEFClusters ();
+    int nHGCHEB = pfcand.getNHGCHEBClusters ();
+    
+    for (int iHGCEE = 0; iHGCEE < nHGCEE; ++iHGCEE){
+      HGCEECluster r = pfcand.getHGCEECluster(iHGCEE);
+      if ( fabs(r.D()) > max ) max = fabs(r.D());
+    }
+
+    for (int iHGCHEB = 0; iHGCHEB < nHGCHEB; ++iHGCHEB){
+      HGCHEBCluster r = pfcand.getHGCHEBCluster(iHGCHEB);
+      if ( fabs(r.D()) > max ) max = fabs(r.D());
+    }
+
+    for (int iHGCHEF = 0; iHGCHEF < nHGCHEF; ++iHGCHEF){
+      HGCHEFCluster r = pfcand.getHGCHEFCluster(iHGCHEF);
+      if ( fabs(r.D()) > max ) max = fabs(r.D());
+    }
+  }
+  return max;
+}
 
 void PFPrunedJet::calculateDiscriminants() { 
 
