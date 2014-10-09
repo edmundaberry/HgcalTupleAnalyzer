@@ -1,9 +1,12 @@
 *~
 *.o
+*.d
+*.so
 .fuse*
 *.root
 *.png
 *.pdf
+*.pyc
 *.sh
 .#*
 src/analysisClass.C
