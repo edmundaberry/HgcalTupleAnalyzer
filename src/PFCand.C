@@ -17,27 +17,27 @@ double & PFCand::Pt  () { return m_collection -> GetData() -> PFCandPt  -> at ( 
 double & PFCand::Eta () { return m_collection -> GetData() -> PFCandEta -> at ( m_raw_index ); } 
 double & PFCand::Phi () { return m_collection -> GetData() -> PFCandPhi -> at ( m_raw_index ); } 
 
-HGCEERecHit PFCand::getHGCEERecHit (int i){
-  int rechit_index = m_collection -> GetData() -> PFCandHGCEERecHitIndex -> at ( m_raw_index )[i];
-  HGCEERecHit retval ( *m_collection, rechit_index );
+HGCEECluster PFCand::getHGCEECluster (int i){
+  int rechit_index = m_collection -> GetData() -> PFCandHGCEEClusterIndex -> at ( m_raw_index )[i];
+  HGCEECluster retval ( *m_collection, rechit_index );
   return retval;
 }
 
-HGCHEBRecHit PFCand::getHGCHEBRecHit (int i){
-  int rechit_index = m_collection -> GetData() -> PFCandHGCHEBRecHitIndex -> at ( m_raw_index )[i];
-  HGCHEBRecHit retval ( *m_collection, rechit_index );
+HGCHEBCluster PFCand::getHGCHEBCluster (int i){
+  int rechit_index = m_collection -> GetData() -> PFCandHGCHEBClusterIndex -> at ( m_raw_index )[i];
+  HGCHEBCluster retval ( *m_collection, rechit_index );
   return retval;
 }
 
-HGCHEFRecHit PFCand::getHGCHEFRecHit (int i){
-  int rechit_index = m_collection -> GetData() -> PFCandHGCHEFRecHitIndex -> at ( m_raw_index )[i];
-  HGCHEFRecHit retval ( *m_collection, rechit_index );
+HGCHEFCluster PFCand::getHGCHEFCluster (int i){
+  int rechit_index = m_collection -> GetData() -> PFCandHGCHEFClusterIndex -> at ( m_raw_index )[i];
+  HGCHEFCluster retval ( *m_collection, rechit_index );
   return retval;
 }
 
-int PFCand::getNHGCEERecHits() { return m_collection -> GetData() -> PFCandHGCEERecHitIndex  -> at ( m_raw_index ).size(); }
-int PFCand::getNHGCHEBRecHits(){ return m_collection -> GetData() -> PFCandHGCHEBRecHitIndex -> at ( m_raw_index ).size(); }
-int PFCand::getNHGCHEFRecHits(){ return m_collection -> GetData() -> PFCandHGCHEFRecHitIndex -> at ( m_raw_index ).size(); }
+int PFCand::getNHGCEEClusters() { return m_collection -> GetData() -> PFCandHGCEEClusterIndex  -> at ( m_raw_index ).size(); }
+int PFCand::getNHGCHEBClusters(){ return m_collection -> GetData() -> PFCandHGCHEBClusterIndex -> at ( m_raw_index ).size(); }
+int PFCand::getNHGCHEFClusters(){ return m_collection -> GetData() -> PFCandHGCHEFClusterIndex -> at ( m_raw_index ).size(); }
 
 std::ostream& operator<<(std::ostream& stream, PFCand& object) {
   stream << object.Name() << " " << ": "
