@@ -73,18 +73,13 @@ int getFlavor ( Jet & jet, CollectionPtr gen ){
 }
 
 template <class Jet>
-void fillPlots ( CollectionPtr jets, CollectionPtr partons, likelihoodGetter & l,
-		 TH1F * h_like_quarkJets    , TH1F * h_like_gluonJets,
-		 TH1F * h_nsubj_quarkJets   , TH1F * h_nsubj_gluonJets,
-		 TH1F * h_mass_quarkJets    , TH1F * h_mass_gluonJets ,
-		 TH1F * h_nDaught_quarkJets , TH1F * h_nDaught_gluonJets,
-		 TH1F * h_width_quarkJets   , TH1F * h_width_gluonJets,
-		 TH1F * h_multi_quarkJets   , TH1F * h_multi_gluonJets,
-		 TH1F * h_ptd_quarkJets     , TH1F * h_ptd_gluonJets ) {
-  
+void fillPlots ( CollectionPtr jets, CollectionPtr partons, likelihoodGetter & l, 
+		 std::vector<TH1F*> quark_th1, std::vector<TH1F*> gluon_th1,
+		 std::vector<TH2F*> quark_th2, std::vector<TH2F*> gluon_th2 ){
+
   int n_jets = jets -> GetSize();
 
-  std::vector<double> variables;
+  std::vector<double> likelihood_variables;
 
   for (int i = 0; i < n_jets; ++i){
     Jet jet = jets -> GetConstituent<Jet>(i);
@@ -93,36 +88,42 @@ void fillPlots ( CollectionPtr jets, CollectionPtr partons, likelihoodGetter & l
     bool isQuarkJet ( flavor == 1 );
     bool isGluonJet ( flavor == 0 );
 
-    variables.clear();
-
-    variables.push_back ( jet.NDaughters() );
-    variables.push_back ( jet.getWidth()   );
-    variables.push_back ( jet.getNPFCandidates() );
-    variables.push_back ( jet.getPTD() );
-    variables.push_back ( jet.NSubJ() );
+    likelihood_variables.clear();
     
-    double likelihood  = l.getLikelihood    ( "quarkPrunedR001Jets", variables );
-
-    // std::cout << "ptd = " << jet.getPTD() << std::endl;
+    likelihood_variables.push_back ( jet.NDaughters() );
+    likelihood_variables.push_back ( jet.getWidth()   );
+    likelihood_variables.push_back ( jet.getNPFCandidates() );
+    likelihood_variables.push_back ( jet.getPTD() );
+    likelihood_variables.push_back ( jet.NSubJ() );
     
+    double likelihood  = l.getLikelihood ( "quarkPrunedR001Jets", likelihood_variables );
+
     if ( isQuarkJet ){
-      h_like_quarkJets    -> Fill ( likelihood );
-      h_nsubj_quarkJets   -> Fill ( jet.NSubJ() );
-      h_nDaught_quarkJets -> Fill ( jet.NDaughters());
-      h_mass_quarkJets    -> Fill ( jet.Mass () * 1000. );
-      h_ptd_quarkJets     -> Fill ( jet.getPTD () );
-      h_width_quarkJets   -> Fill ( jet.getWidth () );
-      h_multi_quarkJets   -> Fill ( jet.getNPFCandidates() );
-    }
+      quark_th1[0] -> Fill ( jet.NSubJ() );
+      quark_th1[1] -> Fill ( jet.Mass() * 1000. );
+      quark_th1[2] -> Fill ( jet.NDaughters() );
+      quark_th1[3] -> Fill ( jet.getNPFCandidates() );
+      quark_th1[4] -> Fill ( jet.getWidth() );
+      quark_th1[5] -> Fill ( jet.getWeightedDepth() );
+      quark_th1[6] -> Fill ( jet.getPTD() );
+      quark_th1[7] -> Fill ( likelihood );
 
-    if ( isGluonJet ){ 
-      h_like_gluonJets    -> Fill ( likelihood );
-      h_nsubj_gluonJets   -> Fill ( jet.NSubJ() );
-      h_nDaught_gluonJets -> Fill ( jet.NDaughters());
-      h_mass_gluonJets    -> Fill ( jet.Mass () * 1000. );
-      h_ptd_gluonJets     -> Fill ( jet.getPTD () );
-      h_width_gluonJets   -> Fill ( jet.getWidth () );
-      h_multi_gluonJets   -> Fill ( jet.getNPFCandidates() );
+      quark_th2[0] -> Fill ( jet.Pt(), jet.getWeightedDepth());
+      quark_th2[1] -> Fill ( jet.Pt(), jet.getMaxRHDepth());
+    }
+    
+    if ( isGluonJet ){
+      gluon_th1[0] -> Fill ( jet.NSubJ() );
+      gluon_th1[1] -> Fill ( jet.Mass() * 1000. );
+      gluon_th1[2] -> Fill ( jet.NDaughters() );
+      gluon_th1[3] -> Fill ( jet.getNPFCandidates() );
+      gluon_th1[4] -> Fill ( jet.getWidth() );
+      gluon_th1[5] -> Fill ( jet.getWeightedDepth() );
+      gluon_th1[6] -> Fill ( jet.getPTD() );
+      gluon_th1[7] -> Fill ( likelihood );
+
+      gluon_th2[0] -> Fill ( jet.Pt(), jet.getWeightedDepth());
+      gluon_th2[1] -> Fill ( jet.Pt(), jet.getMaxRHDepth());
     }
   }
 }
@@ -165,233 +166,121 @@ void analysisClass::loop(){
   // Likelihood getter
   //--------------------------------------------------------------------------------
 
-  std::vector<std::string> variables;
-  variables.push_back ( "nDaught" );
-  variables.push_back ( "width"   );
-  variables.push_back ( "multi"   );
-  variables.push_back ( "ptd"     );
-  variables.push_back ( "nsubj"   );
+  std::vector<std::string> likelihood_variables;
+  likelihood_variables.push_back ( "nDaught" );
+  likelihood_variables.push_back ( "width"   );
+  likelihood_variables.push_back ( "multi"   );
+  likelihood_variables.push_back ( "ptd"     );
+  likelihood_variables.push_back ( "nsubj"   );
   
   std::vector<std::string> signals;
   signals.push_back ( "quarkPrunedR001Jets" );
 
   std::string file_name ("likelihood_hists_fromQQH.root");
 
-  likelihoodGetter l ( file_name, variables, signals );
+  likelihoodGetter l ( file_name, likelihood_variables, signals );
   
   //--------------------------------------------------------------------------------
   // Make histograms
   //--------------------------------------------------------------------------------
 
-  TH1F * h_nsubj_quarkPrunedR5Jets     = makeTH1F("nsubj_quarkPrunedR5Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR5Jets     = makeTH1F("nsubj_gluonPrunedR5Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR5Jets      = makeTH1F("mass_quarkPrunedR5Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR5Jets      = makeTH1F("mass_gluonPrunedR5Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR5Jets   = makeTH1F("nDaught_quarkPrunedR5Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR5Jets   = makeTH1F("nDaught_gluonPrunedR5Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR5Jets     = makeTH1F("width_quarkPrunedR5Jets"     , 200 ,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR5Jets     = makeTH1F("multi_quarkPrunedR5Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR5Jets       = makeTH1F("ptd_quarkPrunedR5Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR5Jets     = makeTH1F("width_gluonPrunedR5Jets"     , 200 ,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR5Jets     = makeTH1F("multi_gluonPrunedR5Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR5Jets       = makeTH1F("ptd_gluonPrunedR5Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR5Jets      = makeTH1F("like_gluonPrunedR5Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR5Jets      = makeTH1F("like_quarkPrunedR5Jets"      ,  20 , 0   ,     1   );
+  std::vector<TH1F*> th1_templates;
+  th1_templates.push_back ( makeTH1F ("nsubj"  , 20  ,  0. ,     1.  ));
+  th1_templates.push_back ( makeTH1F ("mass"   , 2000,  0. , 20000.  ));
+  th1_templates.push_back ( makeTH1F ("nDaught", 50  , -0.5,    49.5 ));
+  th1_templates.push_back ( makeTH1F ("multi"  , 100 , -0.5,    99.5 ));
+  th1_templates.push_back ( makeTH1F ("width"  , 200 ,  0. ,     1.  ));
+  th1_templates.push_back ( makeTH1F ("depth"  , 200 ,  0. ,  1000.  ));
+  th1_templates.push_back ( makeTH1F ("ptd"    ,  20 ,  0. ,     1.  ));
+  th1_templates.push_back ( makeTH1F ("like"   ,  20 ,  0. ,     1.  ));
+
+  std::vector<TH2F*> th2_templates;
+  th2_templates.push_back ( makeTH2F ("jetPt_vs_depth"     , 100, 0, 250, 200 ,  0. ,  1000.  ));
+  th2_templates.push_back ( makeTH2F ("jetPt_vs_maxRHDepth", 100, 0, 250, 200 ,  0. ,  1000.  ));
+
+  std::vector<std::string> rcut_values;
+  rcut_values.push_back ( "R5" );
+  rcut_values.push_back ( "R4" );
+  rcut_values.push_back ( "R3" );
+  rcut_values.push_back ( "R2" );
+  rcut_values.push_back ( "R1" );
+  rcut_values.push_back ( "R05" );
+  rcut_values.push_back ( "R04" );
+  rcut_values.push_back ( "R03" );
+  rcut_values.push_back ( "R02" );
+  rcut_values.push_back ( "R01" );
+  rcut_values.push_back ( "R008" );
+  rcut_values.push_back ( "R005" );
+  rcut_values.push_back ( "R003" );
+  rcut_values.push_back ( "R001" );
+
+  std::map<std::string, std::vector<TH1F*> > m_quark_rcut_th1;
+  std::map<std::string, std::vector<TH1F*> > m_gluon_rcut_th1;
+  std::map<std::string, std::vector<TH2F*> > m_quark_rcut_th2;
+  std::map<std::string, std::vector<TH2F*> > m_gluon_rcut_th2;
   
-  TH1F * h_nsubj_quarkPrunedR4Jets     = makeTH1F("nsubj_quarkPrunedR4Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR4Jets     = makeTH1F("nsubj_gluonPrunedR4Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR4Jets      = makeTH1F("mass_quarkPrunedR4Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR4Jets      = makeTH1F("mass_gluonPrunedR4Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR4Jets   = makeTH1F("nDaught_quarkPrunedR4Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR4Jets   = makeTH1F("nDaught_gluonPrunedR4Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR4Jets     = makeTH1F("width_quarkPrunedR4Jets"     , 200 ,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR4Jets     = makeTH1F("multi_quarkPrunedR4Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR4Jets       = makeTH1F("ptd_quarkPrunedR4Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR4Jets     = makeTH1F("width_gluonPrunedR4Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR4Jets     = makeTH1F("multi_gluonPrunedR4Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR4Jets       = makeTH1F("ptd_gluonPrunedR4Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR4Jets      = makeTH1F("like_gluonPrunedR4Jets"      ,  20 , 0   ,     1   ); 
-  TH1F * h_like_quarkPrunedR4Jets      = makeTH1F("like_quarkPrunedR4Jets"      ,  20 , 0   ,     1   ); 
+  int n_th1_templates = th1_templates.size();
+  int n_th2_templates = th2_templates.size();
+  int n_rcutValues    = rcut_values.size();
+  char quark_hist_name[100];
+  char gluon_hist_name[100];
   
-  TH1F * h_nsubj_quarkPrunedR3Jets     = makeTH1F("nsubj_quarkPrunedR3Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR3Jets     = makeTH1F("nsubj_gluonPrunedR3Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR3Jets      = makeTH1F("mass_quarkPrunedR3Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR3Jets      = makeTH1F("mass_gluonPrunedR3Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR3Jets   = makeTH1F("nDaught_quarkPrunedR3Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR3Jets   = makeTH1F("nDaught_gluonPrunedR3Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR3Jets     = makeTH1F("width_quarkPrunedR3Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR3Jets     = makeTH1F("multi_quarkPrunedR3Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR3Jets       = makeTH1F("ptd_quarkPrunedR3Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR3Jets     = makeTH1F("width_gluonPrunedR3Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR3Jets     = makeTH1F("multi_gluonPrunedR3Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR3Jets       = makeTH1F("ptd_gluonPrunedR3Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR3Jets      = makeTH1F("like_gluonPrunedR3Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR3Jets      = makeTH1F("like_quarkPrunedR3Jets"      ,  20 , 0   ,     1   );
+  for (int i_th1_template = 0; i_th1_template < n_th1_templates; ++i_th1_template){
+    for (int i_rcutValue = 0; i_rcutValue < n_rcutValues; ++i_rcutValue ){
+      
+      TH1F * hist_template = th1_templates[i_th1_template];
+      
+      sprintf(quark_hist_name, "%s_quarkPruned%sJets", hist_template -> GetName(), rcut_values[i_rcutValue].c_str());
+      sprintf(gluon_hist_name, "%s_gluonPruned%sJets", hist_template -> GetName(), rcut_values[i_rcutValue].c_str());
+      
+      TH1F * quark_hist = makeTH1F(quark_hist_name, 
+				   hist_template -> GetNbinsX(), 
+				   hist_template -> GetXaxis() -> GetXmin(),
+				   hist_template -> GetXaxis() -> GetXmax() );
+				   
+      TH1F * gluon_hist = makeTH1F(gluon_hist_name, 
+				   hist_template -> GetNbinsX(), 
+				   hist_template -> GetXaxis() -> GetXmin(),
+				   hist_template -> GetXaxis() -> GetXmax() );
+
+      m_quark_rcut_th1[rcut_values[i_rcutValue]].push_back(quark_hist);
+      m_gluon_rcut_th1[rcut_values[i_rcutValue]].push_back(gluon_hist);
+      
+    }
+  }
+
   
-  TH1F * h_nsubj_quarkPrunedR2Jets     = makeTH1F("nsubj_quarkPrunedR2Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR2Jets     = makeTH1F("nsubj_gluonPrunedR2Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR2Jets      = makeTH1F("mass_quarkPrunedR2Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR2Jets      = makeTH1F("mass_gluonPrunedR2Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR2Jets   = makeTH1F("nDaught_quarkPrunedR2Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR2Jets   = makeTH1F("nDaught_gluonPrunedR2Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR2Jets     = makeTH1F("width_quarkPrunedR2Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR2Jets     = makeTH1F("multi_quarkPrunedR2Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR2Jets       = makeTH1F("ptd_quarkPrunedR2Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR2Jets     = makeTH1F("width_gluonPrunedR2Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR2Jets     = makeTH1F("multi_gluonPrunedR2Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR2Jets       = makeTH1F("ptd_gluonPrunedR2Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR2Jets      = makeTH1F("like_gluonPrunedR2Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR2Jets      = makeTH1F("like_quarkPrunedR2Jets"      ,  20 , 0   ,     1   );
+  for (int i_th2_template = 0; i_th2_template < n_th2_templates; ++i_th2_template){
+    for (int i_rcutValue = 0; i_rcutValue < n_rcutValues; ++i_rcutValue ){
+      
+      TH2F * hist_template = th2_templates[i_th2_template];
+      
+      sprintf(quark_hist_name, "%s_quarkPruned%sJets", hist_template -> GetName(), rcut_values[i_rcutValue].c_str());
+      sprintf(gluon_hist_name, "%s_gluonPruned%sJets", hist_template -> GetName(), rcut_values[i_rcutValue].c_str());
+      
+      TH2F * quark_hist = makeTH2F(quark_hist_name, 
+				   hist_template -> GetNbinsX(), 
+				   hist_template -> GetXaxis() -> GetXmin(),
+				   hist_template -> GetXaxis() -> GetXmax(),
+				   hist_template -> GetNbinsY(), 
+				   hist_template -> GetYaxis() -> GetXmin(),
+				   hist_template -> GetYaxis() -> GetXmax());
+				   
+      TH2F * gluon_hist = makeTH2F(gluon_hist_name, 
+				   hist_template -> GetNbinsX(), 
+				   hist_template -> GetXaxis() -> GetXmin(),
+				   hist_template -> GetXaxis() -> GetXmax(),
+				   hist_template -> GetNbinsY(), 
+				   hist_template -> GetYaxis() -> GetXmin(),
+				   hist_template -> GetYaxis() -> GetXmax());
+				   
+      m_quark_rcut_th2[rcut_values[i_rcutValue]].push_back(quark_hist);
+      m_gluon_rcut_th2[rcut_values[i_rcutValue]].push_back(gluon_hist);
+      
+    }
+  }
+
   
-  TH1F * h_nsubj_quarkPrunedR1Jets     = makeTH1F("nsubj_quarkPrunedR1Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR1Jets     = makeTH1F("nsubj_gluonPrunedR1Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR1Jets      = makeTH1F("mass_quarkPrunedR1Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR1Jets      = makeTH1F("mass_gluonPrunedR1Jets"      , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR1Jets   = makeTH1F("nDaught_quarkPrunedR1Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR1Jets   = makeTH1F("nDaught_gluonPrunedR1Jets"   , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR1Jets     = makeTH1F("width_quarkPrunedR1Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR1Jets     = makeTH1F("multi_quarkPrunedR1Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR1Jets       = makeTH1F("ptd_quarkPrunedR1Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR1Jets     = makeTH1F("width_gluonPrunedR1Jets"     ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR1Jets     = makeTH1F("multi_gluonPrunedR1Jets"     , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR1Jets       = makeTH1F("ptd_gluonPrunedR1Jets"       ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR1Jets      = makeTH1F("like_gluonPrunedR1Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR1Jets      = makeTH1F("like_quarkPrunedR1Jets"      ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR05Jets    = makeTH1F("nsubj_quarkPrunedR05Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR05Jets    = makeTH1F("nsubj_gluonPrunedR05Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR05Jets     = makeTH1F("mass_quarkPrunedR05Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR05Jets     = makeTH1F("mass_gluonPrunedR05Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR05Jets  = makeTH1F("nDaught_quarkPrunedR05Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR05Jets  = makeTH1F("nDaught_gluonPrunedR05Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR05Jets    = makeTH1F("width_quarkPrunedR05Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR05Jets    = makeTH1F("multi_quarkPrunedR05Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR05Jets      = makeTH1F("ptd_quarkPrunedR05Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR05Jets    = makeTH1F("width_gluonPrunedR05Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR05Jets    = makeTH1F("multi_gluonPrunedR05Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR05Jets      = makeTH1F("ptd_gluonPrunedR05Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR05Jets     = makeTH1F("like_gluonPrunedR05Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR05Jets     = makeTH1F("like_quarkPrunedR05Jets"     ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR04Jets    = makeTH1F("nsubj_quarkPrunedR04Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR04Jets    = makeTH1F("nsubj_gluonPrunedR04Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR04Jets     = makeTH1F("mass_quarkPrunedR04Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR04Jets     = makeTH1F("mass_gluonPrunedR04Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR04Jets  = makeTH1F("nDaught_quarkPrunedR04Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR04Jets  = makeTH1F("nDaught_gluonPrunedR04Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR04Jets    = makeTH1F("width_quarkPrunedR04Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR04Jets    = makeTH1F("multi_quarkPrunedR04Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR04Jets      = makeTH1F("ptd_quarkPrunedR04Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR04Jets    = makeTH1F("width_gluonPrunedR04Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR04Jets    = makeTH1F("multi_gluonPrunedR04Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR04Jets      = makeTH1F("ptd_gluonPrunedR04Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR04Jets     = makeTH1F("like_gluonPrunedR04Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR04Jets     = makeTH1F("like_quarkPrunedR04Jets"     ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR03Jets    = makeTH1F("nsubj_quarkPrunedR03Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR03Jets    = makeTH1F("nsubj_gluonPrunedR03Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR03Jets     = makeTH1F("mass_quarkPrunedR03Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR03Jets     = makeTH1F("mass_gluonPrunedR03Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR03Jets  = makeTH1F("nDaught_quarkPrunedR03Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR03Jets  = makeTH1F("nDaught_gluonPrunedR03Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR03Jets    = makeTH1F("width_quarkPrunedR03Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR03Jets    = makeTH1F("multi_quarkPrunedR03Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR03Jets      = makeTH1F("ptd_quarkPrunedR03Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR03Jets    = makeTH1F("width_gluonPrunedR03Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR03Jets    = makeTH1F("multi_gluonPrunedR03Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR03Jets      = makeTH1F("ptd_gluonPrunedR03Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR03Jets     = makeTH1F("like_gluonPrunedR03Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR03Jets     = makeTH1F("like_quarkPrunedR03Jets"     ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR02Jets    = makeTH1F("nsubj_quarkPrunedR02Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR02Jets    = makeTH1F("nsubj_gluonPrunedR02Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR02Jets     = makeTH1F("mass_quarkPrunedR02Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR02Jets     = makeTH1F("mass_gluonPrunedR02Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR02Jets  = makeTH1F("nDaught_quarkPrunedR02Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR02Jets  = makeTH1F("nDaught_gluonPrunedR02Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR02Jets    = makeTH1F("width_quarkPrunedR02Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR02Jets    = makeTH1F("multi_quarkPrunedR02Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR02Jets      = makeTH1F("ptd_quarkPrunedR02Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR02Jets    = makeTH1F("width_gluonPrunedR02Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR02Jets    = makeTH1F("multi_gluonPrunedR02Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR02Jets      = makeTH1F("ptd_gluonPrunedR02Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR02Jets     = makeTH1F("like_gluonPrunedR02Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR02Jets     = makeTH1F("like_quarkPrunedR02Jets"     ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR01Jets    = makeTH1F("nsubj_quarkPrunedR01Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR01Jets    = makeTH1F("nsubj_gluonPrunedR01Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR01Jets     = makeTH1F("mass_quarkPrunedR01Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR01Jets     = makeTH1F("mass_gluonPrunedR01Jets"     , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR01Jets  = makeTH1F("nDaught_quarkPrunedR01Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR01Jets  = makeTH1F("nDaught_gluonPrunedR01Jets"  , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR01Jets    = makeTH1F("width_quarkPrunedR01Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR01Jets    = makeTH1F("multi_quarkPrunedR01Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR01Jets      = makeTH1F("ptd_quarkPrunedR01Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR01Jets    = makeTH1F("width_gluonPrunedR01Jets"    ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR01Jets    = makeTH1F("multi_gluonPrunedR01Jets"    , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR01Jets      = makeTH1F("ptd_gluonPrunedR01Jets"      ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR01Jets     = makeTH1F("like_gluonPrunedR01Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR01Jets     = makeTH1F("like_quarkPrunedR01Jets"     ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR008Jets   = makeTH1F("nsubj_quarkPrunedR008Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR008Jets   = makeTH1F("nsubj_gluonPrunedR008Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR008Jets    = makeTH1F("mass_quarkPrunedR008Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR008Jets    = makeTH1F("mass_gluonPrunedR008Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR008Jets = makeTH1F("nDaught_quarkPrunedR008Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR008Jets = makeTH1F("nDaught_gluonPrunedR008Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_width_quarkPrunedR008Jets   = makeTH1F("width_quarkPrunedR008Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR008Jets   = makeTH1F("multi_quarkPrunedR008Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR008Jets     = makeTH1F("ptd_quarkPrunedR008Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_width_gluonPrunedR008Jets   = makeTH1F("width_gluonPrunedR008Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR008Jets   = makeTH1F("multi_gluonPrunedR008Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR008Jets     = makeTH1F("ptd_gluonPrunedR008Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR008Jets    = makeTH1F("like_gluonPrunedR008Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR008Jets    = makeTH1F("like_quarkPrunedR008Jets"    ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR005Jets   = makeTH1F("nsubj_quarkPrunedR005Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR005Jets   = makeTH1F("nsubj_gluonPrunedR005Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR005Jets    = makeTH1F("mass_quarkPrunedR005Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR005Jets    = makeTH1F("mass_gluonPrunedR005Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR005Jets = makeTH1F("nDaught_quarkPrunedR005Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR005Jets = makeTH1F("nDaught_gluonPrunedR005Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_width_gluonPrunedR005Jets   = makeTH1F("width_gluonPrunedR005Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR005Jets   = makeTH1F("multi_gluonPrunedR005Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR005Jets     = makeTH1F("ptd_gluonPrunedR005Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_width_quarkPrunedR005Jets   = makeTH1F("width_quarkPrunedR005Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR005Jets   = makeTH1F("multi_quarkPrunedR005Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR005Jets     = makeTH1F("ptd_quarkPrunedR005Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR005Jets    = makeTH1F("like_gluonPrunedR005Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR005Jets    = makeTH1F("like_quarkPrunedR005Jets"    ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR003Jets   = makeTH1F("nsubj_quarkPrunedR003Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR003Jets   = makeTH1F("nsubj_gluonPrunedR003Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR003Jets    = makeTH1F("mass_quarkPrunedR003Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR003Jets    = makeTH1F("mass_gluonPrunedR003Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR003Jets = makeTH1F("nDaught_quarkPrunedR003Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR003Jets = makeTH1F("nDaught_gluonPrunedR003Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_width_gluonPrunedR003Jets   = makeTH1F("width_gluonPrunedR003Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR003Jets   = makeTH1F("multi_gluonPrunedR003Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR003Jets     = makeTH1F("ptd_gluonPrunedR003Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_width_quarkPrunedR003Jets   = makeTH1F("width_quarkPrunedR003Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR003Jets   = makeTH1F("multi_quarkPrunedR003Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR003Jets     = makeTH1F("ptd_quarkPrunedR003Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR003Jets    = makeTH1F("like_gluonPrunedR003Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR003Jets    = makeTH1F("like_quarkPrunedR003Jets"    ,  20 , 0   ,     1   );
-  
-  TH1F * h_nsubj_quarkPrunedR001Jets   = makeTH1F("nsubj_quarkPrunedR001Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_nsubj_gluonPrunedR001Jets   = makeTH1F("nsubj_gluonPrunedR001Jets"   ,  20 , 0   ,     1   );
-  TH1F * h_mass_quarkPrunedR001Jets    = makeTH1F("mass_quarkPrunedR001Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_mass_gluonPrunedR001Jets    = makeTH1F("mass_gluonPrunedR001Jets"    , 2000,  0. , 20000.  );
-  TH1F * h_nDaught_quarkPrunedR001Jets = makeTH1F("nDaught_quarkPrunedR001Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_nDaught_gluonPrunedR001Jets = makeTH1F("nDaught_gluonPrunedR001Jets" , 50  , -0.5,    49.5 );
-  TH1F * h_width_gluonPrunedR001Jets   = makeTH1F("width_gluonPrunedR001Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_gluonPrunedR001Jets   = makeTH1F("multi_gluonPrunedR001Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_gluonPrunedR001Jets     = makeTH1F("ptd_gluonPrunedR001Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_width_quarkPrunedR001Jets   = makeTH1F("width_quarkPrunedR001Jets"   ,  200,  0.0,     1.0 );
-  TH1F * h_multi_quarkPrunedR001Jets   = makeTH1F("multi_quarkPrunedR001Jets"   , 100 , -0.5,    99.5 );
-  TH1F * h_ptd_quarkPrunedR001Jets     = makeTH1F("ptd_quarkPrunedR001Jets"     ,  20 , 0   ,     1   );
-  TH1F * h_like_gluonPrunedR001Jets    = makeTH1F("like_gluonPrunedR001Jets"    ,  20 , 0   ,     1   );
-  TH1F * h_like_quarkPrunedR001Jets    = makeTH1F("like_quarkPrunedR001Jets"    ,  20 , 0   ,     1   );
   
   //--------------------------------------------------------------------------------
   // Loop over the events
@@ -426,186 +315,95 @@ void analysisClass::loop(){
     // PFJet collections
     //--------------------------------------------------------------------------------
     
-    // All pruned PF jets
-    CollectionPtr c_pfjet_prunedR5_all   ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt   -> size()));
-    CollectionPtr c_pfjet_prunedR4_all   ( new Collection(*tree, tree -> PFCA4PrunedJetRCut4Pt   -> size()));
-    CollectionPtr c_pfjet_prunedR3_all   ( new Collection(*tree, tree -> PFCA4PrunedJetRCut3Pt   -> size()));
-    CollectionPtr c_pfjet_prunedR2_all   ( new Collection(*tree, tree -> PFCA4PrunedJetRCut2Pt   -> size()));
-    CollectionPtr c_pfjet_prunedR1_all   ( new Collection(*tree, tree -> PFCA4PrunedJetRCut1Pt   -> size()));
-    CollectionPtr c_pfjet_prunedR05_all  ( new Collection(*tree, tree -> PFCA4PrunedJetRCut05Pt  -> size()));
-    CollectionPtr c_pfjet_prunedR04_all  ( new Collection(*tree, tree -> PFCA4PrunedJetRCut04Pt  -> size()));
-    CollectionPtr c_pfjet_prunedR03_all  ( new Collection(*tree, tree -> PFCA4PrunedJetRCut03Pt  -> size()));
-    CollectionPtr c_pfjet_prunedR02_all  ( new Collection(*tree, tree -> PFCA4PrunedJetRCut02Pt  -> size()));
-    CollectionPtr c_pfjet_prunedR01_all  ( new Collection(*tree, tree -> PFCA4PrunedJetRCut01Pt  -> size()));
-    CollectionPtr c_pfjet_prunedR008_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut008Pt -> size()));
-    CollectionPtr c_pfjet_prunedR005_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut005Pt -> size()));
-    CollectionPtr c_pfjet_prunedR003_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut003Pt -> size()));
-    CollectionPtr c_pfjet_prunedR001_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut001Pt -> size()));
+    std::vector<std::string>::iterator i_rcut     = rcut_values.begin();
+    std::vector<std::string>::iterator i_rcut_end = rcut_values.end();
     
-    // All fiducial pruned jets
-    CollectionPtr c_pfjet_prunedR5_fid   = c_pfjet_prunedR5_all   -> SkimByAbsEtaRange<PFPrunedR5Jet>   ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR4_fid   = c_pfjet_prunedR4_all   -> SkimByAbsEtaRange<PFPrunedR4Jet>   ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR3_fid   = c_pfjet_prunedR3_all   -> SkimByAbsEtaRange<PFPrunedR3Jet>   ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR2_fid   = c_pfjet_prunedR2_all   -> SkimByAbsEtaRange<PFPrunedR2Jet>   ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR1_fid   = c_pfjet_prunedR1_all   -> SkimByAbsEtaRange<PFPrunedR1Jet>   ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR05_fid  = c_pfjet_prunedR05_all  -> SkimByAbsEtaRange<PFPrunedR05Jet>  ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR04_fid  = c_pfjet_prunedR04_all  -> SkimByAbsEtaRange<PFPrunedR04Jet>  ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR03_fid  = c_pfjet_prunedR03_all  -> SkimByAbsEtaRange<PFPrunedR03Jet>  ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR02_fid  = c_pfjet_prunedR02_all  -> SkimByAbsEtaRange<PFPrunedR02Jet>  ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR01_fid  = c_pfjet_prunedR01_all  -> SkimByAbsEtaRange<PFPrunedR01Jet>  ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR008_fid = c_pfjet_prunedR008_all -> SkimByAbsEtaRange<PFPrunedR008Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR005_fid = c_pfjet_prunedR005_all -> SkimByAbsEtaRange<PFPrunedR005Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR003_fid = c_pfjet_prunedR003_all -> SkimByAbsEtaRange<PFPrunedR003Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    CollectionPtr c_pfjet_prunedR001_fid = c_pfjet_prunedR001_all -> SkimByAbsEtaRange<PFPrunedR001Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
-    
-    //--------------------------------------------------------------------------------
-    // Loop over the jets...
-    //--------------------------------------------------------------------------------
+    for (; i_rcut != i_rcut_end; ++i_rcut){
+      
+      if      ( i_rcut -> compare( "R5" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR5Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR5Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R4" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR4Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR4Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R3" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR3Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR3Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R2" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR2Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR2Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R1" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR1Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR1Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R05" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR05Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR05Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R04" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR04Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR04Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R03" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR03Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR03Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R02" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR02Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR02Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R01" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR01Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR01Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R008" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR008Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR008Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R005" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR005Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR005Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+      else if ( i_rcut -> compare( "R003" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR003Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR003Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
 
-    fillPlots<PFPrunedR5Jet> ( c_pfjet_prunedR5_fid, c_partons, l, 
-			       h_like_quarkPrunedR5Jets    , h_like_gluonPrunedR5Jets,
-			       h_nsubj_quarkPrunedR5Jets   , h_nsubj_gluonPrunedR5Jets, 
-			       h_mass_quarkPrunedR5Jets    , h_mass_gluonPrunedR5Jets ,
-			       h_nDaught_quarkPrunedR5Jets , h_nDaught_gluonPrunedR5Jets,
-			       h_width_quarkPrunedR5Jets   , h_width_gluonPrunedR5Jets,
-			       h_multi_quarkPrunedR5Jets   , h_multi_gluonPrunedR5Jets,
-			       h_ptd_quarkPrunedR5Jets     , h_ptd_gluonPrunedR5Jets
-			       );
-    
-    fillPlots<PFPrunedR4Jet> ( c_pfjet_prunedR4_fid, c_partons, l, 
-			       h_like_quarkPrunedR4Jets    , h_like_gluonPrunedR4Jets,
-			       h_nsubj_quarkPrunedR4Jets   , h_nsubj_gluonPrunedR4Jets, 
-			       h_mass_quarkPrunedR4Jets    , h_mass_gluonPrunedR4Jets ,
-			       h_nDaught_quarkPrunedR4Jets , h_nDaught_gluonPrunedR4Jets,
-			       h_width_quarkPrunedR4Jets   , h_width_gluonPrunedR4Jets,
-			       h_multi_quarkPrunedR4Jets   , h_multi_gluonPrunedR4Jets,
-			       h_ptd_quarkPrunedR4Jets     , h_ptd_gluonPrunedR4Jets
-			       );
-
-    fillPlots<PFPrunedR3Jet> ( c_pfjet_prunedR3_fid, c_partons, l, 
-			       h_like_quarkPrunedR3Jets    , h_like_gluonPrunedR3Jets,
-			       h_nsubj_quarkPrunedR3Jets   , h_nsubj_gluonPrunedR3Jets, 
-			       h_mass_quarkPrunedR3Jets    , h_mass_gluonPrunedR3Jets ,
-			       h_nDaught_quarkPrunedR3Jets , h_nDaught_gluonPrunedR3Jets,
-			       h_width_quarkPrunedR3Jets   , h_width_gluonPrunedR3Jets,
-			       h_multi_quarkPrunedR3Jets   , h_multi_gluonPrunedR3Jets,
-			       h_ptd_quarkPrunedR3Jets     , h_ptd_gluonPrunedR3Jets
-			       );
-
-    fillPlots<PFPrunedR2Jet> ( c_pfjet_prunedR2_fid, c_partons, l, 
-			       h_like_quarkPrunedR2Jets    , h_like_gluonPrunedR2Jets,
-			       h_nsubj_quarkPrunedR2Jets   , h_nsubj_gluonPrunedR2Jets, 
-			       h_mass_quarkPrunedR2Jets    , h_mass_gluonPrunedR2Jets ,
-			       h_nDaught_quarkPrunedR2Jets , h_nDaught_gluonPrunedR2Jets,
-			       h_width_quarkPrunedR2Jets   , h_width_gluonPrunedR2Jets,
-			       h_multi_quarkPrunedR2Jets   , h_multi_gluonPrunedR2Jets,
-			       h_ptd_quarkPrunedR2Jets     , h_ptd_gluonPrunedR2Jets
-			       );
-
-
-    fillPlots<PFPrunedR1Jet> ( c_pfjet_prunedR1_fid, c_partons, l, 
-			       h_like_quarkPrunedR1Jets    , h_like_gluonPrunedR1Jets,
-			       h_nsubj_quarkPrunedR1Jets   , h_nsubj_gluonPrunedR1Jets, 
-			       h_mass_quarkPrunedR1Jets    , h_mass_gluonPrunedR1Jets ,
-			       h_nDaught_quarkPrunedR1Jets , h_nDaught_gluonPrunedR1Jets,
-			       h_width_quarkPrunedR1Jets   , h_width_gluonPrunedR1Jets,
-			       h_multi_quarkPrunedR1Jets   , h_multi_gluonPrunedR1Jets,
-			       h_ptd_quarkPrunedR1Jets     , h_ptd_gluonPrunedR1Jets
-			       );
-
-    fillPlots<PFPrunedR05Jet> ( c_pfjet_prunedR05_fid, c_partons, l, 
-				h_like_quarkPrunedR05Jets    , h_like_gluonPrunedR05Jets,
-				h_nsubj_quarkPrunedR05Jets   , h_nsubj_gluonPrunedR05Jets, 
-				h_mass_quarkPrunedR05Jets    , h_mass_gluonPrunedR05Jets ,
-				h_nDaught_quarkPrunedR05Jets , h_nDaught_gluonPrunedR05Jets,
-				h_width_quarkPrunedR05Jets   , h_width_gluonPrunedR05Jets,
-				h_multi_quarkPrunedR05Jets   , h_multi_gluonPrunedR05Jets,
-				h_ptd_quarkPrunedR05Jets     , h_ptd_gluonPrunedR05Jets
-				);
-    
-    fillPlots<PFPrunedR04Jet> ( c_pfjet_prunedR04_fid, c_partons, l, 
-				h_like_quarkPrunedR04Jets    , h_like_gluonPrunedR04Jets,
-				h_nsubj_quarkPrunedR04Jets   , h_nsubj_gluonPrunedR04Jets, 
-				h_mass_quarkPrunedR04Jets    , h_mass_gluonPrunedR04Jets ,
-				h_nDaught_quarkPrunedR04Jets , h_nDaught_gluonPrunedR04Jets ,
-				h_width_quarkPrunedR04Jets   , h_width_gluonPrunedR04Jets,
-				h_multi_quarkPrunedR04Jets   , h_multi_gluonPrunedR04Jets,
-				h_ptd_quarkPrunedR04Jets     , h_ptd_gluonPrunedR04Jets
-				);
-
-    fillPlots<PFPrunedR03Jet> ( c_pfjet_prunedR03_fid, c_partons, l, 
-				h_like_quarkPrunedR03Jets    , h_like_gluonPrunedR03Jets,
-				h_nsubj_quarkPrunedR03Jets   , h_nsubj_gluonPrunedR03Jets, 
-				h_mass_quarkPrunedR03Jets    , h_mass_gluonPrunedR03Jets ,
-				h_nDaught_quarkPrunedR03Jets , h_nDaught_gluonPrunedR03Jets,
-				h_width_quarkPrunedR03Jets   , h_width_gluonPrunedR03Jets,
-				h_multi_quarkPrunedR03Jets   , h_multi_gluonPrunedR03Jets,
-				h_ptd_quarkPrunedR03Jets     , h_ptd_gluonPrunedR03Jets
-			       );
-
-    fillPlots<PFPrunedR02Jet> ( c_pfjet_prunedR02_fid, c_partons, l, 
-				h_like_quarkPrunedR02Jets    , h_like_gluonPrunedR02Jets,
-				h_nsubj_quarkPrunedR02Jets   , h_nsubj_gluonPrunedR02Jets, 
-				h_mass_quarkPrunedR02Jets    , h_mass_gluonPrunedR02Jets ,
-				h_nDaught_quarkPrunedR02Jets , h_nDaught_gluonPrunedR02Jets,
-				h_width_quarkPrunedR02Jets   , h_width_gluonPrunedR02Jets,
-				h_multi_quarkPrunedR02Jets   , h_multi_gluonPrunedR02Jets,
-				h_ptd_quarkPrunedR02Jets     , h_ptd_gluonPrunedR02Jets
-				);
-    
-    fillPlots<PFPrunedR01Jet> ( c_pfjet_prunedR01_fid, c_partons, l, 
-				h_like_quarkPrunedR01Jets    , h_like_gluonPrunedR01Jets,
-				h_nsubj_quarkPrunedR01Jets   , h_nsubj_gluonPrunedR01Jets, 
-				h_mass_quarkPrunedR01Jets    , h_mass_gluonPrunedR01Jets ,
-				h_nDaught_quarkPrunedR01Jets , h_nDaught_gluonPrunedR01Jets,
-				h_width_quarkPrunedR01Jets   , h_width_gluonPrunedR01Jets,
-				h_multi_quarkPrunedR01Jets   , h_multi_gluonPrunedR01Jets,
-				h_ptd_quarkPrunedR01Jets     , h_ptd_gluonPrunedR01Jets
-			       );
-
-
-    fillPlots<PFPrunedR008Jet> ( c_pfjet_prunedR008_fid, c_partons, l, 
-				 h_like_quarkPrunedR008Jets    , h_like_gluonPrunedR008Jets,
-				 h_nsubj_quarkPrunedR008Jets   , h_nsubj_gluonPrunedR008Jets, 
-				 h_mass_quarkPrunedR008Jets    , h_mass_gluonPrunedR008Jets ,
-				 h_nDaught_quarkPrunedR008Jets , h_nDaught_gluonPrunedR008Jets,
-				 h_width_quarkPrunedR008Jets   , h_width_gluonPrunedR008Jets,
-				 h_multi_quarkPrunedR008Jets   , h_multi_gluonPrunedR008Jets,
-				 h_ptd_quarkPrunedR008Jets     , h_ptd_gluonPrunedR008Jets
-				 );
-
-    fillPlots<PFPrunedR005Jet> ( c_pfjet_prunedR005_fid, c_partons, l, 
-				 h_like_quarkPrunedR005Jets    , h_like_gluonPrunedR005Jets,
-				 h_nsubj_quarkPrunedR005Jets   , h_nsubj_gluonPrunedR005Jets, 
-				 h_mass_quarkPrunedR005Jets    , h_mass_gluonPrunedR005Jets ,
-				 h_nDaught_quarkPrunedR005Jets , h_nDaught_gluonPrunedR005Jets ,
-				 h_width_quarkPrunedR005Jets   , h_width_gluonPrunedR005Jets,
-				 h_multi_quarkPrunedR005Jets   , h_multi_gluonPrunedR005Jets,
-				 h_ptd_quarkPrunedR005Jets     , h_ptd_gluonPrunedR005Jets
-			       );
-
-    fillPlots<PFPrunedR003Jet> ( c_pfjet_prunedR003_fid, c_partons, l, 
-				 h_like_quarkPrunedR003Jets    , h_like_gluonPrunedR003Jets,
-				 h_nsubj_quarkPrunedR003Jets   , h_nsubj_gluonPrunedR003Jets, 
-				 h_mass_quarkPrunedR003Jets    , h_mass_gluonPrunedR003Jets ,
-				 h_nDaught_quarkPrunedR003Jets , h_nDaught_gluonPrunedR003Jets,
-				 h_width_quarkPrunedR003Jets   , h_width_gluonPrunedR003Jets,
-				 h_multi_quarkPrunedR003Jets   , h_multi_gluonPrunedR003Jets,
-				 h_ptd_quarkPrunedR003Jets     , h_ptd_gluonPrunedR003Jets
-			       );
-
-
-    fillPlots<PFPrunedR001Jet> ( c_pfjet_prunedR001_fid, c_partons, l, 
-				 h_like_quarkPrunedR001Jets    , h_like_gluonPrunedR001Jets,
-				 h_nsubj_quarkPrunedR001Jets   , h_nsubj_gluonPrunedR001Jets, 
-				 h_mass_quarkPrunedR001Jets    , h_mass_gluonPrunedR001Jets ,
-				 h_nDaught_quarkPrunedR001Jets , h_nDaught_gluonPrunedR001Jets ,
-				 h_width_quarkPrunedR001Jets   , h_width_gluonPrunedR001Jets,
-				 h_multi_quarkPrunedR001Jets   , h_multi_gluonPrunedR001Jets,
-				 h_ptd_quarkPrunedR001Jets     , h_ptd_gluonPrunedR001Jets
-			       );
-
-
-    
-  }
-}
+      else if ( i_rcut -> compare( "R001" ) == 0 ){ 
+	CollectionPtr c_pfjet_all ( new Collection(*tree, tree -> PFCA4PrunedJetRCut5Pt -> size()));
+	CollectionPtr c_pfjet_fid = c_pfjet_all -> SkimByAbsEtaRange<PFPrunedR001Jet> ( HGCAL_abseta_min, HGCAL_abseta_max );;
+	fillPlots<PFPrunedR001Jet> ( c_pfjet_fid, c_partons, l, m_quark_rcut_th1[*i_rcut], m_gluon_rcut_th1[*i_rcut], m_quark_rcut_th2[*i_rcut], m_gluon_rcut_th2[*i_rcut] );
+      }
+      
+    } // end loop over r-cut values
+  } // end loop over events
+} // end loop function
