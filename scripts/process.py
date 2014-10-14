@@ -1,43 +1,29 @@
-import os, sys
+import os 
 
-rcut_factors = [ 
-    0.001,
-    0.005,
-    0.008,
-    0.01 ,
-    0.02 ,
-    0.03 ,
-    0.04 ,
-    0.05 ,
-    0.1  ,
-    0.2  ,
-    0.3  ,
-    0.4  ,
-    0.5  
+r_parameters = [ 
+    "R001",
+    "R003",
+    "R008",
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5" 
 ]
 
-for factor in rcut_factors:
-    
-    name = str(factor).replace("0.","")
-    
-    old_src_file = "src/PFPrunedR003Jet.C"
-    new_src_file = old_src_file.replace("003", name)
+for r_parameter in r_parameters:
+    commands = []
+    commands.append( "cp include/PFPrunedR005Jet.h include/PFPruned"+r_parameter+"Jet.h")
+    commands.append( "perl -pi -e 's/005/" + r_parameter[1:] + "/g' include/PFPruned"+r_parameter+"Jet.h")
+    commands.append( "cp src/PFPrunedR005Jet.C src/PFPruned"+r_parameter+"Jet.C")
+    commands.append( "perl -pi -e 's/005/" + r_parameter[1:] + "/g' src/PFPruned"+r_parameter+"Jet.C")
 
-    old_header_file = "include/PFPrunedR003Jet.h"
-    new_header_file = old_header_file.replace("003", name)
+    for command in commands:
+        print command
+        os.system(command)
     
-    cp_command_1 = "cp " + old_src_file + " " + new_src_file
-    cp_command_2 = "cp " + old_header_file + " " + new_header_file
-    
-    perl_command_1 = "perl -pi -e 's/003/" + name + "/g' " + new_src_file
-    perl_command_2 = "perl -pi -e 's/003/" + name + "/g' " + new_header_file
-
-    os.system ( cp_command_1 )
-    os.system ( cp_command_2 )
-    
-    os.system ( perl_command_1 )
-    os.system ( perl_command_2 )
-
-    print "$(SRC)/PFPrunedR" + name + "Jet.o ",
-
-print "\n"
