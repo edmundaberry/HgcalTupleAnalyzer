@@ -20,6 +20,7 @@ class PFPrunedR04Jet : public PFPrunedJet {
   double & Tau3         ();
   double & NSubJ        ();
   double & Mass         ();
+  double & Energy       ();
 
   // Subjet variables
 

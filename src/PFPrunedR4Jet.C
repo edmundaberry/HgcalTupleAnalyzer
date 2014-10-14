@@ -20,6 +20,7 @@ double & PFPrunedR4Jet::Tau2         ()      { return m_collection -> GetData() 
 double & PFPrunedR4Jet::Tau3         ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut4Tau3         -> at ( m_raw_index );    }
 double & PFPrunedR4Jet::NSubJ        ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut4NSubJ        -> at ( m_raw_index );    }
 double & PFPrunedR4Jet::Mass         ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut4Mass         -> at ( m_raw_index );    }
+double & PFPrunedR4Jet::Energy       ()      { return m_collection -> GetData() -> PFCA4PrunedJetRCut4Energy       -> at ( m_raw_index );    }
 
 // Subjet variables  
 
