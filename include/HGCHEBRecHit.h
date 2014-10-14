@@ -5,6 +5,8 @@
 #include "IDTypes.h"
 #include "Collection.h"
 
+static const double HGCHEBMIPValueInGeV = 1498.4*1e-6;
+
 class HGCHEBRecHit : public Object { 
 
  public:
@@ -30,6 +32,18 @@ class HGCHEBRecHit : public Object {
   int    & Sector    ();
   int    & Subdet    ();
   int    & SubSector ();
+
+  void    SetClusterEta( double e ) { m_clusterEta = e; } 
+  double  EffMIPToInvGeV() { 
+    double _coef_a = 1.0;
+    double _coef_b = 1e6;
+    double _coef_c = 1e6;
+    return _coef_a/(1.0 + std::exp(-_coef_c - _coef_b*std::cosh(m_clusterEta)));
+  }
+  double  weight (){ return 0.1051; }
+  double  EnergyMIP() { return Energy()    / HGCHEBMIPValueInGeV; }
+  double  EnergyCorr(){ return EnergyMIP() * weight() / EffMIPToInvGeV(); }
+  
   
   // IDs 
 
@@ -37,6 +51,7 @@ class HGCHEBRecHit : public Object {
   
  private:
   double m_et;
+  double m_clusterEta;
 
 };
 
