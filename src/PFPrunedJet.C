@@ -30,32 +30,90 @@ double PFPrunedJet::getWeightedDepth(){
 
   double sumE2xD = 0.;
   double sumE2   = 0.;
-  
+
   for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+
     PFCand pfcand = getPFCandidate(iPFCand);
     
-    int nHGCEE  = pfcand.getNHGCEEClusters  ();
-    int nHGCHEF = pfcand.getNHGCHEFClusters ();
-    int nHGCHEB = pfcand.getNHGCHEBClusters ();
-    
-    for (int iHGCEE = 0; iHGCEE < nHGCEE; ++iHGCEE){
-      HGCEECluster r = pfcand.getHGCEECluster(iHGCEE);
-      sumE2    += ( r.Energy() * r.Energy() );
-      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    int nHGCEEClusters  = pfcand.getNHGCEEClusters  ();
+    int nHGCHEFClusters = pfcand.getNHGCHEFClusters ();
+    int nHGCHEBClusters = pfcand.getNHGCHEBClusters ();
+
+    for (int iHGCEECluster = 0; iHGCEECluster < nHGCEEClusters; ++iHGCEECluster){
+      HGCEECluster cluster = pfcand.getHGCEECluster(iHGCEECluster);
+      int nRecHits = cluster.getNHGCEERecHits();
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCEERecHit r = cluster.getHGCEERecHit(iRecHit);
+	sumE2    += ( r.EnergyCorr() * r.EnergyCorr() );
+	sumE2xD  += ( r.EnergyCorr() * r.EnergyCorr() * fabs(r.Z()) );
+      }
     }
 
-    for (int iHGCHEB = 0; iHGCHEB < nHGCHEB; ++iHGCHEB){
-      HGCHEBCluster r = pfcand.getHGCHEBCluster(iHGCHEB);
-      sumE2    += ( r.Energy() * r.Energy() );
-      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    for (int iHGCHEBCluster = 0; iHGCHEBCluster < nHGCHEBClusters; ++iHGCHEBCluster){
+      HGCHEBCluster cluster = pfcand.getHGCHEBCluster(iHGCHEBCluster);
+      int nRecHits = cluster.getNHGCHEBRecHits();
+      double energy_sum = 0.;
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCHEBRecHit r = cluster.getHGCHEBRecHit(iRecHit);
+	sumE2    += ( r.EnergyCorr() * r.EnergyCorr() );
+	sumE2xD  += ( r.EnergyCorr() * r.EnergyCorr() * fabs(r.Z()) );
+	energy_sum  += r.EnergyCorr();
+      }
     }
 
-    for (int iHGCHEF = 0; iHGCHEF < nHGCHEF; ++iHGCHEF){
-      HGCHEFCluster r = pfcand.getHGCHEFCluster(iHGCHEF);
-      sumE2    += ( r.Energy() * r.Energy() );
-      sumE2xD  += ( r.Energy() * r.Energy() * fabs(r.D()) );
+    for (int iHGCHEFCluster = 0; iHGCHEFCluster < nHGCHEFClusters; ++iHGCHEFCluster){
+      HGCHEFCluster cluster = pfcand.getHGCHEFCluster(iHGCHEFCluster);
+      int nRecHits = cluster.getNHGCHEFRecHits();
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCHEFRecHit r = cluster.getHGCHEFRecHit(iRecHit);
+	sumE2    += ( r.EnergyCorr() * r.EnergyCorr() );
+	sumE2xD  += ( r.EnergyCorr() * r.EnergyCorr() * fabs(r.Z()) );
+      }
     }
   }
+
+  if ( sumE2 > 0 ){ 
+    return sumE2xD / sumE2;
+  }
+  return -1;
+}
+
+double PFPrunedJet::getWeightedDepthNoEE(){
+  int nPFCand = getNPFCandidates();
+
+  double sumE2xD = 0.;
+  double sumE2   = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCHEFClusters = pfcand.getNHGCHEFClusters ();
+    int nHGCHEBClusters = pfcand.getNHGCHEBClusters ();
+
+    for (int iHGCHEBCluster = 0; iHGCHEBCluster < nHGCHEBClusters; ++iHGCHEBCluster){
+      HGCHEBCluster cluster = pfcand.getHGCHEBCluster(iHGCHEBCluster);
+      int nRecHits = cluster.getNHGCHEBRecHits();
+      double energy_sum = 0.;
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCHEBRecHit r = cluster.getHGCHEBRecHit(iRecHit);
+	sumE2    += ( r.EnergyCorr() * r.EnergyCorr() );
+	sumE2xD  += ( r.EnergyCorr() * r.EnergyCorr() * fabs(r.Z()) );
+	energy_sum  += r.EnergyCorr();
+      }
+    }
+
+    for (int iHGCHEFCluster = 0; iHGCHEFCluster < nHGCHEFClusters; ++iHGCHEFCluster){
+      HGCHEFCluster cluster = pfcand.getHGCHEFCluster(iHGCHEFCluster);
+      int nRecHits = cluster.getNHGCHEFRecHits();
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCHEFRecHit r = cluster.getHGCHEFRecHit(iRecHit);
+	sumE2    += ( r.EnergyCorr() * r.EnergyCorr() );
+	sumE2xD  += ( r.EnergyCorr() * r.EnergyCorr() * fabs(r.Z()) );
+      }
+    }
+  }
+
   if ( sumE2 > 0 ){ 
     return sumE2xD / sumE2;
   }
@@ -152,4 +210,136 @@ void PFPrunedJet::calculateDiscriminants() {
   else { 
     m_ptd = -1.0;
   }
+}
+
+double PFPrunedJet::getEEEnergy(){
+
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  double HGCEE_energy = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCEEClusters = pfcand.getNHGCEEClusters();
+    
+    for (int iHGCEECluster = 0; iHGCEECluster < nHGCEEClusters; ++iHGCEECluster){
+      HGCEECluster cluster = pfcand.getHGCEECluster(iHGCEECluster);
+      HGCEE_energy += cluster.Energy();
+    }
+  }
+  
+  return HGCEE_energy;
+    
+}
+
+
+double PFPrunedJet::getHEBEnergy(){
+
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  double HGCHEB_energy = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCHEBClusters = pfcand.getNHGCHEBClusters();
+    
+    for (int iHGCHEBCluster = 0; iHGCHEBCluster < nHGCHEBClusters; ++iHGCHEBCluster){
+      HGCHEBCluster cluster = pfcand.getHGCHEBCluster(iHGCHEBCluster);
+      HGCHEB_energy += cluster.Energy();
+    }
+  }
+  
+  return HGCHEB_energy;
+    
+}
+
+double PFPrunedJet::getHEFEnergy(){
+
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  double HGCHEF_energy = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCHEFClusters = pfcand.getNHGCHEFClusters();
+    
+    for (int iHGCHEFCluster = 0; iHGCHEFCluster < nHGCHEFClusters; ++iHGCHEFCluster){
+      HGCHEFCluster cluster = pfcand.getHGCHEFCluster(iHGCHEFCluster);
+      HGCHEF_energy += cluster.Energy();
+    }
+  }
+  
+  return HGCHEF_energy;
+    
+}
+
+
+double PFPrunedJet::getHEFEnergy(int min_layer, int max_layer){
+
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  double HGCHEF_energy = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCHEFClusters = pfcand.getNHGCHEFClusters();
+    
+    for (int iHGCHEFCluster = 0; iHGCHEFCluster < nHGCHEFClusters; ++iHGCHEFCluster){
+      HGCHEFCluster cluster = pfcand.getHGCHEFCluster(iHGCHEFCluster);
+      
+      int nRecHits = cluster.getNHGCHEFRecHits();
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCHEFRecHit r = cluster.getHGCHEFRecHit(iRecHit); 
+	if ( r.Layer() < min_layer ) continue;
+	if ( r.Layer() > max_layer ) continue;
+	HGCHEF_energy += r.EnergyCorr();
+      }
+    }
+  }
+  
+  return HGCHEF_energy;
+    
+}
+
+
+double PFPrunedJet::getEEEnergy(int min_layer, int max_layer){
+
+  int nPFCand = getNPFCandidates();
+  double max = -1.;
+  
+  double HGCEE_energy = 0.;
+
+  for (int iPFCand = 0; iPFCand < nPFCand; ++iPFCand){
+    PFCand pfcand = getPFCandidate(iPFCand);
+    
+    int nHGCEEClusters = pfcand.getNHGCEEClusters();
+    
+    for (int iHGCEECluster = 0; iHGCEECluster < nHGCEEClusters; ++iHGCEECluster){
+      HGCEECluster cluster = pfcand.getHGCEECluster(iHGCEECluster);
+      
+      int nRecHits = cluster.getNHGCEERecHits();
+      for (int iRecHit = 0; iRecHit < nRecHits; ++iRecHit){
+	HGCEERecHit r = cluster.getHGCEERecHit(iRecHit); 
+	if ( r.Layer() < min_layer ) continue;
+	if ( r.Layer() > max_layer ) continue;
+	HGCEE_energy += r.EnergyCorr();
+      }
+    }
+  }
+  
+  return HGCEE_energy;
+    
+}
+
+
+double PFPrunedJet::getHGCALEnergy(){
+  return getEEEnergy () + getHEFEnergy () + getHEBEnergy ();
 }
