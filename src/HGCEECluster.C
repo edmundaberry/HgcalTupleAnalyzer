@@ -38,9 +38,10 @@ std::ostream& operator<<(std::ostream& stream, HGCEECluster & object) {
 HGCEERecHit HGCEECluster::getHGCEERecHit (int i){
   int rechit_index = m_collection -> GetData() -> HGCEEPFClusterRecHitIndex -> at ( m_raw_index )[i];
   HGCEERecHit retval ( *m_collection, rechit_index );
+  retval.SetClusterEta( Eta() );
   return retval;
 }
 
 int HGCEECluster::getNHGCEERecHits (){
-  return m_collection -> GetData() -> HGCEEPFClusterRecHitIndex -> size();
+  return m_collection -> GetData() -> HGCEEPFClusterRecHitIndex -> at (m_raw_index).size();
 }

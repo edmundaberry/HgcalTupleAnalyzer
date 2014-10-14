@@ -38,9 +38,10 @@ std::ostream& operator<<(std::ostream& stream, HGCHEBCluster & object) {
 HGCHEBRecHit HGCHEBCluster::getHGCHEBRecHit (int i){
   int rechit_index = m_collection -> GetData() -> HGCHEBPFClusterRecHitIndex -> at ( m_raw_index )[i];
   HGCHEBRecHit retval ( *m_collection, rechit_index );
+  retval.SetClusterEta( Eta() );
   return retval;
 }
 
 int HGCHEBCluster::getNHGCHEBRecHits (){
-  return m_collection -> GetData() -> HGCHEBPFClusterRecHitIndex -> size();
+  return m_collection -> GetData() -> HGCHEBPFClusterRecHitIndex -> at (m_raw_index).size();
 }

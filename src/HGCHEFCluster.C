@@ -38,9 +38,10 @@ std::ostream& operator<<(std::ostream& stream, HGCHEFCluster & object) {
 HGCHEFRecHit HGCHEFCluster::getHGCHEFRecHit (int i){
   int rechit_index = m_collection -> GetData() -> HGCHEFPFClusterRecHitIndex -> at ( m_raw_index )[i];
   HGCHEFRecHit retval ( *m_collection, rechit_index );
+  retval.SetClusterEta( Eta() );
   return retval;
 }
 
 int HGCHEFCluster::getNHGCHEFRecHits (){
-  return m_collection -> GetData() -> HGCHEFPFClusterRecHitIndex -> size();
+  return m_collection -> GetData() -> HGCHEFPFClusterRecHitIndex -> at(m_raw_index).size();
 }
