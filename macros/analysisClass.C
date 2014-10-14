@@ -95,35 +95,77 @@ void fillPlots ( CollectionPtr jets, CollectionPtr partons, likelihoodGetter & l
     likelihood_variables.push_back ( jet.getNPFCandidates() );
     likelihood_variables.push_back ( jet.getPTD() );
     likelihood_variables.push_back ( jet.NSubJ() );
+
+    double ee_energy     = jet.getEEEnergy();
+    double ee015_energy  = jet.getEEEnergy(0, 15);
+    double ee1631_energy  = jet.getEEEnergy(16, 31);
+    double hef_energy    = jet.getHEFEnergy();
+    double heb_energy    = jet.getHEBEnergy();
+    double all_energy    = ee_energy + hef_energy + heb_energy;
+
+    double hef11_energy  = jet.getHEFEnergy(1, 1);
+    double hef22_energy  = jet.getHEFEnergy(2, 2);
+    double hef34_energy  = jet.getHEFEnergy(3, 4);
+    double hef56_energy  = jet.getHEFEnergy(5, 6);
+    double hef712_energy = jet.getHEFEnergy(7,12);
     
     double likelihood  = l.getLikelihood ( "quarkPrunedR001Jets", likelihood_variables );
+    double weighted_depth = jet.getWeightedDepth();
+    double weighted_depth_noEE = jet.getWeightedDepthNoEE();
 
     if ( isQuarkJet ){
+
       quark_th1[0] -> Fill ( jet.NSubJ() );
       quark_th1[1] -> Fill ( jet.Mass() * 1000. );
       quark_th1[2] -> Fill ( jet.NDaughters() );
       quark_th1[3] -> Fill ( jet.getNPFCandidates() );
       quark_th1[4] -> Fill ( jet.getWidth() );
-      quark_th1[5] -> Fill ( jet.getWeightedDepth() );
-      quark_th1[6] -> Fill ( jet.getPTD() );
-      quark_th1[7] -> Fill ( likelihood );
+      quark_th1[5] -> Fill ( weighted_depth );
+      quark_th1[6] -> Fill ( weighted_depth_noEE );
+      quark_th1[7] -> Fill ( jet.getPTD() );
+      quark_th1[8] -> Fill ( likelihood );
+      quark_th1[9] -> Fill ( ee_energy / all_energy );
+      quark_th1[10] -> Fill ( ee015_energy / all_energy );
+      quark_th1[11] -> Fill ( ee1631_energy / all_energy );
+      quark_th1[12]-> Fill ( heb_energy / all_energy );
+      quark_th1[13]-> Fill ( hef_energy / all_energy );
+      quark_th1[14]-> Fill ( hef11_energy / all_energy );
+      quark_th1[15]-> Fill ( hef22_energy / all_energy );
+      quark_th1[16]-> Fill ( hef34_energy / all_energy );
+      quark_th1[17]-> Fill ( hef56_energy / all_energy );
+      quark_th1[18]-> Fill ( hef712_energy / all_energy );
 
-      quark_th2[0] -> Fill ( jet.Pt(), jet.getWeightedDepth());
+      quark_th2[0] -> Fill ( jet.Pt(), weighted_depth );
       quark_th2[1] -> Fill ( jet.Pt(), jet.getMaxRHDepth());
+      quark_th2[2] -> Fill ( jet.getNPFCandidates(), jet.NDaughters() );
     }
     
     if ( isGluonJet ){
+
       gluon_th1[0] -> Fill ( jet.NSubJ() );
       gluon_th1[1] -> Fill ( jet.Mass() * 1000. );
       gluon_th1[2] -> Fill ( jet.NDaughters() );
       gluon_th1[3] -> Fill ( jet.getNPFCandidates() );
       gluon_th1[4] -> Fill ( jet.getWidth() );
-      gluon_th1[5] -> Fill ( jet.getWeightedDepth() );
-      gluon_th1[6] -> Fill ( jet.getPTD() );
-      gluon_th1[7] -> Fill ( likelihood );
+      gluon_th1[5] -> Fill ( weighted_depth );
+      gluon_th1[6] -> Fill ( weighted_depth_noEE );
+      gluon_th1[7] -> Fill ( jet.getPTD() );
+      gluon_th1[8] -> Fill ( likelihood );
+      gluon_th1[9] -> Fill ( ee_energy / all_energy );
 
-      gluon_th2[0] -> Fill ( jet.Pt(), jet.getWeightedDepth());
+      gluon_th1[10] -> Fill ( ee015_energy / all_energy );
+      gluon_th1[11] -> Fill ( ee1631_energy / all_energy );
+      gluon_th1[12]-> Fill ( heb_energy / all_energy );
+      gluon_th1[13]-> Fill ( hef_energy / all_energy );
+      gluon_th1[14]-> Fill ( hef11_energy / all_energy );
+      gluon_th1[15]-> Fill ( hef22_energy / all_energy );
+      gluon_th1[16]-> Fill ( hef34_energy / all_energy );
+      gluon_th1[17]-> Fill ( hef56_energy / all_energy );
+      gluon_th1[18]-> Fill ( hef712_energy / all_energy );
+
+      gluon_th2[0] -> Fill ( jet.Pt(), weighted_depth );
       gluon_th2[1] -> Fill ( jet.Pt(), jet.getMaxRHDepth());
+      gluon_th2[2] -> Fill ( jet.getNPFCandidates(), jet.NDaughters() );
     }
   }
 }
@@ -185,18 +227,30 @@ void analysisClass::loop(){
   //--------------------------------------------------------------------------------
 
   std::vector<TH1F*> th1_templates;
-  th1_templates.push_back ( makeTH1F ("nsubj"  , 20  ,  0. ,     1.  ));
-  th1_templates.push_back ( makeTH1F ("mass"   , 2000,  0. , 20000.  ));
-  th1_templates.push_back ( makeTH1F ("nDaught", 50  , -0.5,    49.5 ));
-  th1_templates.push_back ( makeTH1F ("multi"  , 100 , -0.5,    99.5 ));
-  th1_templates.push_back ( makeTH1F ("width"  , 200 ,  0. ,     1.  ));
-  th1_templates.push_back ( makeTH1F ("depth"  , 200 ,  0. ,  1000.  ));
-  th1_templates.push_back ( makeTH1F ("ptd"    ,  20 ,  0. ,     1.  ));
-  th1_templates.push_back ( makeTH1F ("like"   ,  20 ,  0. ,     1.  ));
-
+  th1_templates.push_back ( makeTH1F ("nsubj"                 , 20  ,  0. ,     1.  )); // 0
+  th1_templates.push_back ( makeTH1F ("mass"                  ,2000 ,  0. , 20000.  )); // 1
+  th1_templates.push_back ( makeTH1F ("nDaught"               , 50  , -0.5,    49.5 )); // 2
+  th1_templates.push_back ( makeTH1F ("multi"                 , 100 , -0.5,    99.5 ));	// 3
+  th1_templates.push_back ( makeTH1F ("width"                 , 200 ,  0. ,     1.  ));	// 4
+  th1_templates.push_back ( makeTH1F ("depth"                 , 200 ,  0. ,  1000.  ));	// 5
+  th1_templates.push_back ( makeTH1F ("depth_noEE"            , 200 ,  0. ,  1000.  ));	// 6
+  th1_templates.push_back ( makeTH1F ("ptd"                   ,  20 ,  0. ,     1.  ));	// 7
+  th1_templates.push_back ( makeTH1F ("like"                  ,1000 ,  0. ,     1.  ));	// 8
+  th1_templates.push_back ( makeTH1F ("ee_energy_fraction"    , 100 ,  0. ,     1.  ));	// 9
+  th1_templates.push_back ( makeTH1F ("ee015_energy_fraction" , 100 ,  0. ,     1.  ));	// 9
+  th1_templates.push_back ( makeTH1F ("ee1631_energy_fraction" , 100 ,  0. ,     1.  ));	// 9
+  th1_templates.push_back ( makeTH1F ("heb_energy_fraction"   , 100 ,  0. ,     1.  ));	// 10
+  th1_templates.push_back ( makeTH1F ("hef_energy_fraction"   , 100 ,  0. ,     1.  ));	// 11
+  th1_templates.push_back ( makeTH1F ("hef11_energy_fraction" , 100 ,  0. ,     1.  ));	// 12
+  th1_templates.push_back ( makeTH1F ("hef22_energy_fraction" , 100 ,  0. ,     1.  ));	// 13
+  th1_templates.push_back ( makeTH1F ("hef34_energy_fraction" , 100 ,  0. ,     1.  ));	// 14
+  th1_templates.push_back ( makeTH1F ("hef56_energy_fraction" , 100 ,  0. ,     1.  ));	// 15
+  th1_templates.push_back ( makeTH1F ("hef712_energy_fraction", 100 ,  0. ,     1.  )); // 16
+			    
   std::vector<TH2F*> th2_templates;
-  th2_templates.push_back ( makeTH2F ("jetPt_vs_depth"     , 100, 0, 250, 200 ,  0. ,  1000.  ));
-  th2_templates.push_back ( makeTH2F ("jetPt_vs_maxRHDepth", 100, 0, 250, 200 ,  0. ,  1000.  ));
+  th2_templates.push_back ( makeTH2F ("jetPt_vs_depth"      , 100, 0, 250, 200 ,  0. ,  1000.  ));
+  th2_templates.push_back ( makeTH2F ("jetPt_vs_maxRHDepth" , 100, 0, 250, 200 ,  0. ,  1000.  ));
+  th2_templates.push_back ( makeTH2F ("NPFCands_vs_NSubJets", 51 , -0.5, 50.5, 51 , -0.5, 50.5 ));
 
   std::vector<std::string> rcut_values;
   rcut_values.push_back ( "R5" );
