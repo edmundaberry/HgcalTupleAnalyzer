@@ -28,6 +28,8 @@ class DrawTool:
         self.multigraph_ep_final = r.TMultiGraph("ep_final", "ep_final")
 
         self.colors = list ( range ( 1, 100 ))
+        self.colors.remove( 10 )
+        self.colors.remove( 1 )
         
     def makeLegend(self, jet):
         
