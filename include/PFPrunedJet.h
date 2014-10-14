@@ -25,6 +25,7 @@ class PFPrunedJet : public Object {
   virtual double & Tau3         () = 0;
   virtual double & NSubJ        () = 0;
   virtual double & Mass         () = 0;
+  virtual double & Energy       () = 0;
 
   // Subjet variables
 
@@ -50,6 +51,13 @@ class PFPrunedJet : public Object {
   double getWidth();
   double getPTD  ();
   double getWeightedDepth();
+  double getWeightedDepthNoEE();
+  double getHGCALEnergy();
+  double getEEEnergy();
+  double getHEBEnergy();
+  double getHEFEnergy();
+  double getEEEnergy(int min_layer, int max_layer);
+  double getHEFEnergy(int min_layer, int max_layer);
   double getMaxRHDepth();
   
  private:
