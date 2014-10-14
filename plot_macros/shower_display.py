@@ -13,6 +13,7 @@ from physics_tool import *
 #--------------------------------------------------------------------------------
 
 r.gStyle.SetOptStat(0)
+r.gStyle.SetOptTitle(0)
 r.gROOT.LoadMacro("stl_loader.h+")
 
 #--------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ file    = r.TFile("data/HGCAL_QQH_output.root");
 tree    = file.Get("hgcalTupleTree/tree")
 event   = int(sys.argv[1])
 rcut    = "4" 
-verbose = False
+verbose = not False
     
 #--------------------------------------------------------------------------------
 # Initialize the tree for a given event
@@ -88,6 +89,7 @@ for ijet in range (0, njet):
     #--------------------------------------------------------------------------------
 
     if verbose:
+        print "------------------------------------------"
         print "Drawing shower display for jet #" + str(ijet+1) + " from event #" + str(event)
         print "GEN parton =", flavor.name
         print "GEN pt     = %1.2f" % flavor.pt
@@ -116,30 +118,60 @@ for ijet in range (0, njet):
     tool.multigraph_ep_final.Draw("AP")
     tool.multigraph_ep_final.GetXaxis().SetTitle("#eta");
     tool.multigraph_ep_final.GetYaxis().SetTitle("#phi");
+    tool.multigraph_ep_final.GetXaxis().SetLabelSize(0.1);
+    tool.multigraph_ep_final.GetYaxis().SetLabelSize(0.1);
+    tool.multigraph_ep_final.GetXaxis().SetTitleOffset(0.4);
+    tool.multigraph_ep_final.GetYaxis().SetTitleOffset(0.2);
+    tool.multigraph_ep_final.GetXaxis().SetTitleSize(0.1);
+    tool.multigraph_ep_final.GetYaxis().SetTitleSize(0.1);
     tool.multigraph_ep_final.Draw("AP")
     
     canvas.cd(2)
     tool.multigraph_xy.Draw("AP")
     tool.multigraph_xy.GetXaxis().SetTitle("X [cm]")
     tool.multigraph_xy.GetYaxis().SetTitle("Y [cm]")
+    tool.multigraph_xy.GetXaxis().SetLabelSize(0.1);
+    tool.multigraph_xy.GetYaxis().SetLabelSize(0.1);
+    tool.multigraph_xy.GetXaxis().SetTitleOffset(0.4);
+    tool.multigraph_xy.GetYaxis().SetTitleOffset(0.2);
+    tool.multigraph_xy.GetXaxis().SetTitleSize(0.1);
+    tool.multigraph_xy.GetYaxis().SetTitleSize(0.1);
     tool.multigraph_xy.Draw("AP")
     
     canvas.cd(3)
     tool.multigraph_xz.Draw("AP")
     tool.multigraph_xz.GetXaxis().SetTitle("|Z| [cm]")
     tool.multigraph_xz.GetYaxis().SetTitle("X [cm]")
+    tool.multigraph_xz.GetXaxis().SetLabelSize(0.1);
+    tool.multigraph_xz.GetYaxis().SetLabelSize(0.1);
+    tool.multigraph_xz.GetXaxis().SetTitleOffset(0.4);
+    tool.multigraph_xz.GetYaxis().SetTitleOffset(0.2);
+    tool.multigraph_xz.GetXaxis().SetTitleSize(0.1);
+    tool.multigraph_xz.GetYaxis().SetTitleSize(0.1);
     tool.multigraph_xz.Draw("AP")
     
     canvas.cd(4)
     tool.multigraph_yz.Draw("AP")
     tool.multigraph_yz.GetXaxis().SetTitle("|Z| [cm]")
     tool.multigraph_yz.GetYaxis().SetTitle("Y [cm]")
+    tool.multigraph_yz.GetXaxis().SetLabelSize(0.1);
+    tool.multigraph_yz.GetYaxis().SetLabelSize(0.1);
+    tool.multigraph_yz.GetXaxis().SetTitleOffset(0.4);
+    tool.multigraph_yz.GetYaxis().SetTitleOffset(0.2);
+    tool.multigraph_yz.GetXaxis().SetTitleSize(0.1);
+    tool.multigraph_yz.GetYaxis().SetTitleSize(0.1);
     tool.multigraph_yz.Draw("AP")
     
     canvas.cd(5)
     tool.multigraph_ep.Draw("AP")
     tool.multigraph_ep.GetXaxis().SetTitle("#eta");
     tool.multigraph_ep.GetYaxis().SetTitle("#phi");
+    tool.multigraph_ep.GetXaxis().SetLabelSize(0.1);
+    tool.multigraph_ep.GetYaxis().SetLabelSize(0.1);
+    tool.multigraph_ep.GetXaxis().SetTitleOffset(0.4);
+    tool.multigraph_ep.GetYaxis().SetTitleOffset(0.2);
+    tool.multigraph_ep.GetXaxis().SetTitleSize(0.1);
+    tool.multigraph_ep.GetYaxis().SetTitleSize(0.1);
     tool.multigraph_ep.Draw("AP")
 
     #--------------------------------------------------------------------------------
