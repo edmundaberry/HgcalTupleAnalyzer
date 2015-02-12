@@ -3,12 +3,14 @@
 
 #include "PFCluster.h"
 #include "HGCEERecHit.h"
+#include "HGCHEBRecHit.h"
+#include "HGCHEFRecHit.h"
 
 class HGCEECluster : public PFCluster { 
   
  public:
   HGCEECluster();
-  HGCEECluster(Collection& c, unsigned short i, short j = 0);
+  HGCEECluster(Collection& c, unsigned int i, int j = 0);
   
   double & Pt();
   double & Eta();
@@ -23,12 +25,20 @@ class HGCEECluster : public PFCluster {
 
   bool PassUserID ( ID id, bool verbose = false ); 
 
-  int getNHGCEERecHits();
-  HGCEERecHit getHGCEERecHit (int i);
+  int getNHGCEERecHits ();
+  int getNHGCHEBRecHits();
+  int getNHGCHEFRecHits();
+
+  HGCEERecHit  getHGCEERecHit  (int i);
+  HGCHEBRecHit getHGCHEBRecHit (int i);
+  HGCHEFRecHit getHGCHEFRecHit (int i);
   
  private:
   double m_et;
-  
+  std::vector<double> m_lambdaHEF;
+  std::vector<double> m_rhoRecHitHEF;
+  std::vector<double> m_rhoRecHitHEFSqr;
+
 };
 
 #endif
