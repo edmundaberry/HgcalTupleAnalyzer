@@ -1,4 +1,4 @@
-COMP=clang++
+COMP=g++
 FLAGS= -std=c++11 -g
 # FLAGS = -g
 ROOTINC= -I`root-config --incdir`
