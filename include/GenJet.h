@@ -10,7 +10,7 @@ class GenJet : public Object {
  public:
 
   GenJet();
-  GenJet(Collection& c, unsigned short i, short j = 0);
+  GenJet(Collection& c, unsigned int i, int j = 0);
   
   // Kinematic variables
 
