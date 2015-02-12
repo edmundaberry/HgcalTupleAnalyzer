@@ -10,7 +10,7 @@ class GenParticle : public Object {
  public:
 
   GenParticle();
-  GenParticle(Collection& c, unsigned short i, short j = 0);
+  GenParticle(Collection& c, unsigned int i, int j = 0);
   
   // Kinematic variables
 
@@ -38,6 +38,7 @@ class GenParticle : public Object {
   bool PassUserID_IsFinalStateParton (bool verbose);
   bool PassUserID_IsHardScatter(bool verbose);
   bool PassUserID_IsLepton     (bool verbose);
+  bool PassUserID_IsTau        (bool verbose);
   bool PassUserID_IsQuark      (bool verbose);
   bool PassUserID_IsBQuark     (bool verbose);
   bool PassUserID_IsCQuark     (bool verbose);
@@ -49,6 +50,7 @@ class GenParticle : public Object {
   bool PassUserID_IsHardScatterQuark    ( bool verbose );
   bool PassUserID_IsHardScatterGluon    ( bool verbose );
   bool PassUserID_IsHardScatterLepton   ( bool verbose );
+  bool PassUserID_IsHardScatterTau      ( bool verbose );
 };
 
 std::ostream& operator<< (std::ostream& stream, GenParticle& object);
