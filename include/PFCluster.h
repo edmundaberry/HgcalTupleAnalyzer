@@ -5,6 +5,12 @@
 #include "IDTypes.h"
 #include "Collection.h"
 
+
+#include "HGCEERecHit.h"
+#include "HGCHEBRecHit.h"
+#include "HGCHEFRecHit.h"
+
+
 class PFCluster : public Object { 
 
  public:
@@ -24,9 +30,24 @@ class PFCluster : public Object {
   virtual double & R() = 0;
   double D();
   virtual int    & Layer() = 0;
+
+
+  virtual int getNHGCEERecHits () = 0;
+  virtual int getNHGCHEBRecHits() = 0;
+  virtual int getNHGCHEFRecHits() = 0;
   
+  virtual HGCEERecHit  getHGCEERecHit  (int i) = 0;
+  virtual HGCHEBRecHit getHGCHEBRecHit (int i) = 0;
+  virtual HGCHEFRecHit getHGCHEFRecHit (int i) = 0;
+  
+  double getVolume();
+  double getLength();
+
  private:
+  void calculateVolumeAndLength();
   double m_et;
+  double m_volume;
+  double m_length;
 };
 
 #endif
