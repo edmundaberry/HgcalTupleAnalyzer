@@ -2,13 +2,15 @@
 #define HGCHEF_PF_CLUSTER
 
 #include "PFCluster.h"
+#include "HGCEERecHit.h"
+#include "HGCHEBRecHit.h"
 #include "HGCHEFRecHit.h"
 
 class HGCHEFCluster : public PFCluster { 
   
  public:
   HGCHEFCluster();
-  HGCHEFCluster(Collection& c, unsigned short i, short j = 0);
+  HGCHEFCluster(Collection& c, unsigned int i, int j = 0);
   
   double & Pt();
   double & Eta();
@@ -23,12 +25,20 @@ class HGCHEFCluster : public PFCluster {
 
   bool PassUserID ( ID id, bool verbose = false ); 
 
+  int getNHGCEERecHits ();
+  int getNHGCHEBRecHits();
   int getNHGCHEFRecHits();
+
+  HGCEERecHit  getHGCEERecHit  (int i);
+  HGCHEBRecHit getHGCHEBRecHit (int i);
   HGCHEFRecHit getHGCHEFRecHit (int i);
   
  private:
   double m_et;
-  
+  std::vector<double> m_lambdaHEF;
+  std::vector<double> m_rhoRecHitHEF;
+  std::vector<double> m_rhoRecHitHEFSqr;
+
 };
 
 #endif

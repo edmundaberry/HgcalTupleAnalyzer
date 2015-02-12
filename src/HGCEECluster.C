@@ -1,6 +1,8 @@
 #include "HGCEECluster.h"
+#include "HGCEERecHit.h"
 #include "Object.h"
 #include "IDTypes.h"
+#include "RecHitTypes.h"
 
 #include <cmath>
 
@@ -8,11 +10,13 @@
 
 HGCEECluster::HGCEECluster():
   PFCluster(),
-  m_et (-1.0) {}
+  m_et (-1.0)
+{}
 
-HGCEECluster::HGCEECluster(Collection& c, unsigned short i, short j ):
+HGCEECluster::HGCEECluster(Collection& c, unsigned int i, int j ):
   PFCluster(c,i),
-  m_et (-1.0) {}
+  m_et (-1.0)
+{}
 
 // Kinematic variables
 
@@ -36,12 +40,45 @@ std::ostream& operator<<(std::ostream& stream, HGCEECluster & object) {
 }
 
 HGCEERecHit HGCEECluster::getHGCEERecHit (int i){
-  int rechit_index = m_collection -> GetData() -> HGCEEPFClusterRecHitIndex -> at ( m_raw_index )[i];
-  HGCEERecHit retval ( *m_collection, rechit_index );
+  int rechit_index = m_collection -> GetData() -> HGCEEPFClusterHGCEERecHitIndex  -> at ( m_raw_index )[i];
+  HGCEERecHit retval ( HGCEE, *m_collection, rechit_index );
   retval.SetClusterEta( Eta() );
+  retval.SetClusterX  ( X()   );
+  retval.SetClusterY  ( Y()   );
+  retval.SetClusterZ  ( Z()   );
   return retval;
 }
 
+
+HGCHEBRecHit HGCEECluster::getHGCHEBRecHit (int i){
+  int rechit_index = m_collection -> GetData() -> HGCEEPFClusterHGCHEBRecHitIndex -> at ( m_raw_index )[i];
+  HGCHEBRecHit retval ( HGCEE, *m_collection, rechit_index );
+  retval.SetClusterEta( Eta() );
+  retval.SetClusterX  ( X()   );
+  retval.SetClusterY  ( Y()   );
+  retval.SetClusterZ  ( Z()   );
+  return retval;
+}
+
+HGCHEFRecHit HGCEECluster::getHGCHEFRecHit (int i){
+  int rechit_index = m_collection -> GetData() -> HGCEEPFClusterHGCHEFRecHitIndex -> at ( m_raw_index )[i];
+  HGCHEFRecHit retval ( HGCEE, *m_collection, rechit_index );
+  retval.SetClusterEta( Eta() );
+  retval.SetClusterX  ( X()   );
+  retval.SetClusterY  ( Y()   );
+  retval.SetClusterZ  ( Z()   );
+  return retval;
+}
+
+
 int HGCEECluster::getNHGCEERecHits (){
-  return m_collection -> GetData() -> HGCEEPFClusterRecHitIndex -> at (m_raw_index).size();
+  return m_collection -> GetData() -> HGCEEPFClusterHGCEERecHitIndex -> at (m_raw_index).size();
+}
+
+int HGCEECluster::getNHGCHEBRecHits (){
+  return m_collection -> GetData() -> HGCEEPFClusterHGCHEBRecHitIndex -> at (m_raw_index).size();
+}
+
+int HGCEECluster::getNHGCHEFRecHits (){
+  return m_collection -> GetData() -> HGCEEPFClusterHGCHEFRecHitIndex -> at (m_raw_index).size();
 }
