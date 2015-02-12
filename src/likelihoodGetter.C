@@ -4,9 +4,11 @@
 #include <algorithm>
 
 likelihoodGetter::likelihoodGetter ( std::string & file_name, 
+				     std::string & rcut_factor,
 				     std::vector<std::string> & variables, 
 				     std::vector<std::string> & signals  ):
   m_file_name   ( file_name ),
+  m_rcut_factor ( rcut_factor ),
   m_file        ( new TFile ( file_name.c_str() )),
   m_variables   ( variables ),
   m_signals     ( signals ),
@@ -15,10 +17,10 @@ likelihoodGetter::likelihoodGetter ( std::string & file_name,
   
   for (int i_variable = 0; i_variable < m_n_variables ; ++i_variable ) { 
     
-    char background_hist_name[200]; sprintf( background_hist_name, "%s_gluonPrunedR001Jets", m_variables[i_variable].c_str());
+    char background_hist_name[200]; sprintf( background_hist_name, "%s_gluonPruned%sJets", m_variables[i_variable].c_str(), rcut_factor.c_str());
     TH1F * background_hist = (TH1F*) m_file -> Get(background_hist_name);
     background_hist -> Sumw2();
-    background_hist -> Scale ( 1.0 / background_hist -> Integral());
+    background_hist -> Scale ( 1.0 / background_hist -> Integral(0, background_hist -> GetNbinsX() + 1));
     
     if ( background_hist == 0 ){
       std::cout << "Can't find this histogram: " << background_hist_name << std::endl;
@@ -42,9 +44,9 @@ likelihoodGetter::likelihoodGetter ( std::string & file_name,
 
 likelihoodGetter::~likelihoodGetter(){}
 
-double likelihoodGetter::getLikelihood ( const char * signal_name, std::vector<double> & values ){
+double likelihoodGetter::getLikelihood ( std::vector<double> & values ){
   
-  std::vector<std::string>::iterator it_signal = std::find ( m_signals.begin(), m_signals.end(), signal_name ) ;
+  std::vector<std::string>::iterator it_signal = m_signals.begin();
   
   int i_signal = std::distance ( m_signals.begin(), it_signal );
   
@@ -70,9 +72,9 @@ double likelihoodGetter::getLikelihood ( const char * signal_name, std::vector<d
 }
 
 
-double likelihoodGetter::getLogLikelihood ( const char * signal_name, std::vector<double> & values ){
+double likelihoodGetter::getLogLikelihood ( std::vector<double> & values ){
   
-  std::vector<std::string>::iterator it_signal = std::find ( m_signals.begin(), m_signals.end(), signal_name ) ;
+  std::vector<std::string>::iterator it_signal = m_signals.begin();
   
   int i_signal = std::distance ( m_signals.begin(), it_signal );
   
