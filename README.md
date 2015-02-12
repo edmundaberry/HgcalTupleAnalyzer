@@ -1,18 +1,17 @@
-HgcalTupleAnalyzer: code to analyze ntuples made by HcalTupleMaker
+HgcalTupleAnalyzer
+==================
 
-Follow the instructions here before building:
+Maintained by Edmund Berry: Edmund.A.Berry(at)CERN.CH
 
-https://github.com/edmundaberry/HgcalTupleMaker
+Code to analyze ntuples made by HcalTupleMaker:
+* https://github.com/edmundaberry/HgcalTupleMaker
 
 To compile:
+* git clone git@github.com:edmundaberry/HgcalTupleAnalyzer.git
+* cd HgcalTupleAnalyzer 
+* ln -s $PWD/macros/analysisClass.C src/analysisClass.C
+* make
 
-cmsrel CMSSW_6_2_0_SLHC16
-mkdir  CMSSW_6_2_0_SLHC16/src/HGCALANA/
-cd     CMSSW_6_2_0_SLHC16/src/HGCALANA/
-git clone git@github.com:edmundaberry/HgcalTupleAnalyzer.git
-
-Support: 
-
-All CMSSW releases supported
-
-Maintained by Edmund.A.Berry@CERN.ch 
+Requires:
+* ROOT: http://root.cern.ch
+* gcc
