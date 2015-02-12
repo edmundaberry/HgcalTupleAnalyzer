@@ -6,38 +6,100 @@
 
 // Constructors
 
-HGCHEBRecHit::HGCHEBRecHit():
+HGCHEBRecHit::HGCHEBRecHit(rechit_type t):
   Object(),
+  m_type(t),
   m_et (-1.0) {}
 
-HGCHEBRecHit::HGCHEBRecHit(Collection& c, unsigned short i, short j ):
+HGCHEBRecHit::HGCHEBRecHit(rechit_type t, Collection& c, unsigned int i, int j ):
   Object(c,i,"HGCHEBRecHit"),
+  m_type(t),
   m_et (-1.0) {}
+
+
+double & HGCHEBRecHit::Eta       () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterEta        -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterEta       -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterEta       -> at ( m_raw_index );
+}
+
+double & HGCHEBRecHit::Phi       () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterPhi        -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterPhi       -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterPhi       -> at ( m_raw_index );
+}
+
+double & HGCHEBRecHit::Energy    () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterEnergy     -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterEnergy    -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterEnergy    -> at ( m_raw_index );
+} 
+			        							       
+double & HGCHEBRecHit::X         () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterX          -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterX         -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterX         -> at ( m_raw_index );
+}
+
+double & HGCHEBRecHit::Y         () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterY          -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterY         -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterY         -> at ( m_raw_index );
+}
+
+double & HGCHEBRecHit::Z         () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterZ          -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterZ         -> at ( m_raw_index );
+  else                           return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterZ         -> at ( m_raw_index );
+}
+
+double & HGCHEBRecHit::R         () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterR          -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterR         -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterR         -> at ( m_raw_index );
+} 
+
+int    & HGCHEBRecHit::Layer     () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterLayer      -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEFClusterLayer     -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCHEBClusterLayer     -> at ( m_raw_index );
+}
+
+int    & HGCHEBRecHit::Cell      () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterCell       -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterCell       -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterCell       -> at ( m_raw_index );
+}
+
+int    & HGCHEBRecHit::Sector    () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSector     -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSector     -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSector     -> at ( m_raw_index );
+}
+
+int    & HGCHEBRecHit::Subdet    () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubdet     -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubdet     -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubdet     -> at ( m_raw_index );
+}
+
+int    & HGCHEBRecHit::SubSector () {
+  if      ( m_type == HGCEE  ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubSector  -> at ( m_raw_index );
+  else if ( m_type == HGCHEF ) return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubSector  -> at ( m_raw_index );
+  else                         return m_collection -> GetData() -> HGCHEBRecHitFromHGCEEClusterSubSector  -> at ( m_raw_index );
+}
+
 
 // Kinematic variables
 
 double & HGCHEBRecHit::Pt        () { Et(); return m_et; }
-double & HGCHEBRecHit::Eta       () { return m_collection -> GetData() -> HGCHEBRecHitEta        -> at ( m_raw_index ); } 
-double & HGCHEBRecHit::Phi       () { return m_collection -> GetData() -> HGCHEBRecHitPhi        -> at ( m_raw_index ); } 
-double & HGCHEBRecHit::Energy    () { return m_collection -> GetData() -> HGCHEBRecHitEnergy     -> at ( m_raw_index ); } 
 double & HGCHEBRecHit::Et        () { 
   double energy = Energy();
   double eta    = Eta();
   m_et = energy * std::cosh ( eta );
   return m_et;
 }
-			        							       
-double & HGCHEBRecHit::X         () { return m_collection -> GetData() -> HGCHEBRecHitX          -> at ( m_raw_index ); } 
-double & HGCHEBRecHit::Y         () { return m_collection -> GetData() -> HGCHEBRecHitY          -> at ( m_raw_index ); } 
-double & HGCHEBRecHit::Z         () { return m_collection -> GetData() -> HGCHEBRecHitZ          -> at ( m_raw_index ); } 
-double & HGCHEBRecHit::R         () { return m_collection -> GetData() -> HGCHEBRecHitR          -> at ( m_raw_index ); } 
-
-int    & HGCHEBRecHit::Layer     () { return m_collection -> GetData() -> HGCHEBRecHitLayer      -> at ( m_raw_index ); }
-int    & HGCHEBRecHit::Cell      () { return m_collection -> GetData() -> HGCHEBRecHitCell       -> at ( m_raw_index ); }
-int    & HGCHEBRecHit::Sector    () { return m_collection -> GetData() -> HGCHEBRecHitSector     -> at ( m_raw_index ); }
-int    & HGCHEBRecHit::Subdet    () { return m_collection -> GetData() -> HGCHEBRecHitSubdet     -> at ( m_raw_index ); }
-int    & HGCHEBRecHit::SubSector () { return m_collection -> GetData() -> HGCHEBRecHitSubSector  -> at ( m_raw_index ); }
-
+	
 std::ostream& operator<<(std::ostream& stream, HGCHEBRecHit& object) {
   stream << object.Name() << " " << ": "
 	 << "Pt = "  << object.Pt ()    << ", "
