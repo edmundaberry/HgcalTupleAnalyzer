@@ -7,7 +7,7 @@
 PFCand::PFCand():
   Object(){}
 
-PFCand::PFCand(Collection& c, unsigned short i, short j ):
+PFCand::PFCand(Collection& c, unsigned int i, int j ):
   Object(c,i,"PFCand") {}
 
 // Kinematic variables
@@ -38,6 +38,39 @@ HGCHEFCluster PFCand::getHGCHEFCluster (int i){
 int PFCand::getNHGCEEClusters() { return m_collection -> GetData() -> PFCandHGCEEClusterIndex  -> at ( m_raw_index ).size(); }
 int PFCand::getNHGCHEBClusters(){ return m_collection -> GetData() -> PFCandHGCHEBClusterIndex -> at ( m_raw_index ).size(); }
 int PFCand::getNHGCHEFClusters(){ return m_collection -> GetData() -> PFCandHGCHEFClusterIndex -> at ( m_raw_index ).size(); }
+
+
+void PFCand::getLeadClusterTypeAndIndex(rechit_type & type, int & raw_index){
+
+  int nHGCEE  = getNHGCEEClusters();
+  int nHGCHEB = getNHGCHEBClusters();
+  int nHGCHEF = getNHGCHEFClusters();
+  int max_energy = -1.;
+  
+  for (int i = 0; i < nHGCEE; ++i){
+    HGCEECluster c = getHGCEECluster(i);
+    if ( c.Energy() > max_energy ){ 
+      type = HGCEE;
+      raw_index = c.GetRawIndex();
+    }
+  }
+
+  for (int i = 0; i < nHGCHEF; ++i){
+    HGCHEFCluster c = getHGCHEFCluster(i);
+    if ( c.Energy() > max_energy ){ 
+      type = HGCHEF;
+      raw_index = c.GetRawIndex();
+    }
+  }
+
+  for (int i = 0; i < nHGCHEB; ++i){
+    HGCHEBCluster c = getHGCHEBCluster(i);
+    if ( c.Energy() > max_energy ){ 
+      type = HGCHEB;
+      raw_index = c.GetRawIndex();
+    }
+  }
+}
 
 std::ostream& operator<<(std::ostream& stream, PFCand& object) {
   stream << object.Name() << " " << ": "

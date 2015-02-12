@@ -13,34 +13,40 @@ class PFPrunedJet : public Object {
   // Constructors
   
   PFPrunedJet();
-  PFPrunedJet(Collection& c, unsigned short i, short j );
+  PFPrunedJet(Collection& c, unsigned short i, short j=0 );
 
   // Kinematic variables
 
-  virtual double & Pt           () = 0;
-  virtual double & Eta          () = 0;
-  virtual double & Phi          () = 0;
-  virtual double & Tau1         () = 0;
-  virtual double & Tau2         () = 0;
-  virtual double & Tau3         () = 0;
-  virtual double & NSubJ        () = 0;
-  virtual double & Mass         () = 0;
-  virtual double & Energy       () = 0;
+  double & Pt           ();
+  double & PtRaw        ();
+  double & Area         ();
+  double & Rho          ();
+  double & Eta          ();
+  double & Phi          ();
+  double & RawMass      ();
+  double & Energy       ();
 
   // Subjet variables
+  
+  double & NSubJettiness();
+  double   NSubJettiness31();
+  double & Tau1();
+  double & Tau2();
+  double & Tau3();
+  
+  // r-cut dependent variables
 
-  virtual double & MassDrop     () = 0;  
-  virtual int    & NDaughters   () = 0;  
-  virtual double & DaughterEta  (int i) = 0;
-  virtual double & DaughterMass (int i) = 0;
-  virtual double & DaughterPhi  (int i) = 0;
-  virtual double & DaughterPt   (int i) = 0;
-  virtual double   RCutParameter() = 0;
-
+  double & TrimmedMass      (int i);
+  int    & TrimmedNPFCands  (int i);
+  int    & TrimmedNSubjets  (int i);
+  double & TrimmedRCutFactor(int i);
+  
   // PF Candidate variables
 
-  virtual int    getNPFCandidates() = 0;
-  virtual PFCand getPFCandidate( int i ) = 0;
+  virtual int    getNPFCandidates();
+  virtual PFCand getPFCandidate( int i );
+  virtual PFCand getLeadPFCandidate ();
+  virtual void   getLeadClusterTypeAndIndex(rechit_type & type, int & raw_index);
 
   // IDs 
 
@@ -49,6 +55,10 @@ class PFPrunedJet : public Object {
   // Q/G ID calculations
   
   double getWidth();
+  double getChargedWidth();
+  double getNeutralWidth();
+  double getChargedFraction();
+  double getNeutralFraction();
   double getPTD  ();
   double getWeightedDepth();
   double getWeightedDepthNoEE();
@@ -59,13 +69,18 @@ class PFPrunedJet : public Object {
   double getEEEnergy(int min_layer, int max_layer);
   double getHEFEnergy(int min_layer, int max_layer);
   double getMaxRHDepth();
+  void   getProfile      ( const int n_radii, double * radii, double * profile );
+  double getProfileRadius( const int n_radii, double * radii, double * profile, double fraction );
   
  private:
   
   void calculateDiscriminants();
   double m_sigma;
+  double m_sigma_charged;
+  double m_sigma_neutral;
   double m_ptd;
-  
+  double m_pt;
+
 };
 
 #endif

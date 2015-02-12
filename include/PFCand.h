@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "IDTypes.h"
+#include "RecHitTypes.h"
 #include "Collection.h"
 
 #include "HGCEECluster.h" 
@@ -14,7 +15,7 @@ class PFCand : public Object {
  public:
 
   PFCand();
-  PFCand(Collection& c, unsigned short i, short j = 0);
+  PFCand(Collection& c, unsigned int i, int j = 0);
   
   // Kinematic variables
 
@@ -40,6 +41,8 @@ class PFCand : public Object {
   int getNHGCEEClusters ();
   int getNHGCHEBClusters();
   int getNHGCHEFClusters();
+
+  void getLeadClusterTypeAndIndex(rechit_type & type, int & raw_index);
 
   HGCEECluster  getHGCEECluster  (int i);
   HGCHEBCluster getHGCHEBCluster (int i);

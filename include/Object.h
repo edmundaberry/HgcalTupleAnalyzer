@@ -10,15 +10,15 @@ class Object {
  public:
   Object();
   Object( const Object & );
-  Object( Collection& collection,  short raw_index );
-  Object( Collection& collection,  short raw_index, const char* name );
+  Object( Collection& collection,  int raw_index );
+  Object( Collection& collection,  int raw_index, const char* name );
 
-  Object( Collection& collection,  short raw_index,  short hlt_filter_index );
-  Object( Collection& collection,  short raw_index,  short hlt_filter_index, const char* name );
+  Object( Collection& collection,  int raw_index,  int hlt_filter_index );
+  Object( Collection& collection,  int raw_index,  int hlt_filter_index, const char* name );
   ~Object();
   
   const char* Name() const { return m_name; }
-  virtual short GetRawIndex() { return m_raw_index; }
+  virtual int GetRawIndex() { return m_raw_index; }
   
   virtual double & Pt()  = 0;
   virtual double & Phi() = 0;
@@ -43,10 +43,10 @@ class Object {
   
   template <class AnotherObject>
     bool MatchByDR ( CollectionPtr c, AnotherObject & best_match, double max_dr ) { 
-    short size = c -> GetSize();
+    int size = c -> GetSize();
     double min_dr = 9999.;
     bool match = false;
-    for (short i = 0; i < size ; ++i){
+    for (int i = 0; i < size ; ++i){
       AnotherObject constituent = c -> GetConstituent<AnotherObject> ( i );
       double dr = DeltaR ( & constituent );
       if ( dr < max_dr ) { 
@@ -60,13 +60,29 @@ class Object {
     return match;
   }
   
+  
+  template <class MyObject>
+  CollectionPtr AllMatchesByDR ( CollectionPtr c, double max_dr ) { 
+    CollectionPtr new_collection ( new Collection(*(m_collection -> GetData()) ,0 ));
+    int size = c -> GetSize();
+    double min_dr = 9999.;
+    for (int i = 0; i < size ; ++i){
+      MyObject constituent = c -> GetConstituent<MyObject> ( i );
+      double dr = DeltaR ( & constituent );
+      if ( dr < max_dr ) { 
+	new_collection -> Append ( constituent.GetRawIndex() );
+      }
+    }
+    return new_collection;
+  }
+  
 
 
  protected:
 
   Collection * m_collection;
-  short m_raw_index;
-  short m_hlt_filter_index;
+  int m_raw_index;
+  int m_hlt_filter_index;
   const char * m_name;
 
 };

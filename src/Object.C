@@ -17,28 +17,28 @@ Object::Object(const Object & o):
   m_hlt_filter_index ( o.m_hlt_filter_index )
 {}
 
-Object::Object(Collection & collection, short raw_index):
+Object::Object(Collection & collection, int raw_index):
   m_name ("NO_NAME"),
   m_collection ( & collection ),
   m_raw_index (raw_index),
   m_hlt_filter_index (-1)
 {}
 
-Object::Object(Collection & collection, short raw_index, short hlt_filter_index):
+Object::Object(Collection & collection, int raw_index, int hlt_filter_index):
   m_name ("NO_NAME"),
   m_collection ( & collection ),
   m_raw_index (raw_index),
   m_hlt_filter_index (hlt_filter_index)
 {}
 
-Object::Object(Collection & collection, short raw_index, const char* name):
+Object::Object(Collection & collection, int raw_index, const char* name):
   m_name (name),
   m_collection ( & collection ),
   m_raw_index (raw_index),
   m_hlt_filter_index (-1)
 {}
 
-Object::Object(Collection & collection, short raw_index, short hlt_filter_index, const char* name):
+Object::Object(Collection & collection, int raw_index, int hlt_filter_index, const char* name):
   m_name (name),
   m_collection ( & collection ),
   m_raw_index (raw_index),
