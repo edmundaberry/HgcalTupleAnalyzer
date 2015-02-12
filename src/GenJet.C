@@ -7,7 +7,7 @@
 GenJet::GenJet():
   Object(){}
 
-GenJet::GenJet(Collection& c, unsigned short i, short j ):
+GenJet::GenJet(Collection& c, unsigned int i, int j ):
   Object(c,i,"GenJet") {}
 
 // Kinematic variables

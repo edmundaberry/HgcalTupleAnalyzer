@@ -6,7 +6,7 @@
 GenParticle::GenParticle():
   Object() {}
 
-GenParticle::GenParticle(Collection& c, unsigned short i, short j ):
+GenParticle::GenParticle(Collection& c, unsigned int i, int j ):
   Object(c,i,"GenParticle") {}
 
 // Kinematic variables
@@ -36,11 +36,13 @@ int    GenParticle::Mother2PdgId(){
 
 std::ostream& operator<<(std::ostream& stream, GenParticle& object) {
   stream << object.Name() << " " << ": "
-	 << "PDG = " << object.PdgId () << ", "
-         << "Status = " << object.Status () << ", "
-	 << "Pt = "  << object.Pt ()    << ", "
-	 << "Eta = " << object.Eta()    << ", "
-	 << "Phi = " << object.Phi();
+	 << "PDG = " << object.PdgId () << ",\t"
+         << "Status = " << object.Status () << ",\t"
+	 << "Pt = "  << object.Pt ()    << ",\t"
+	 // << "Eta = " << object.Eta()    << ", "
+	 // << "Phi = " << object.Phi()    << ", "
+	 << "Mother 1 = " << object.Mother1PdgId() << "(" << object.Mother1Index() << "),\t" 
+	 << "Mother 2 = " << object.Mother2PdgId() << "(" << object.Mother2Index() << ")";
   return stream;
 }
 
