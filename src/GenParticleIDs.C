@@ -13,6 +13,7 @@ bool GenParticle::PassUserID (ID id, bool verbose){
   else if ( id == GEN_PARTICLE_IS_B_QUARK                ) return PassUserID_IsBQuark           (verbose);
   else if ( id == GEN_PARTICLE_IS_C_QUARK                ) return PassUserID_IsCQuark           (verbose);
   else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_LEPTON    ) return PassUserID_IsHardScatterLepton(verbose);
+  else if ( id == GEN_PARTICLE_IS_HARD_SCATTER_TAU       ) return PassUserID_IsHardScatterTau   (verbose);
   else return false;
 }
 
@@ -42,6 +43,10 @@ bool GenParticle::PassUserID_IsLepton(bool verbose){
   return ( abs ( PdgId() ) == 11 ||
 	   abs ( PdgId() ) == 13 ||
 	   abs ( PdgId() ) == 15  );
+}
+
+bool GenParticle::PassUserID_IsTau(bool verbose){
+  return ( abs ( PdgId() ) == 15  );
 }
 
 bool GenParticle::PassUserID_IsGluon(bool verbose){
@@ -103,6 +108,13 @@ bool GenParticle::PassUserID_IsHardScatterQuark ( bool verbose ) {
 bool GenParticle::PassUserID_IsHardScatterLepton ( bool verbose ) {
   if ( ! PassUserID_IsHardScatter(verbose) ) return false;
   if ( ! PassUserID_IsLepton     (verbose) ) return false;
+  return true;
+}
+
+
+bool GenParticle::PassUserID_IsHardScatterTau ( bool verbose ) {
+  if ( ! PassUserID_IsHardScatter(verbose) ) return false;
+  if ( ! PassUserID_IsTau        (verbose) ) return false;
   return true;
 }
 
